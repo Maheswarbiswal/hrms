@@ -166,12 +166,13 @@ SESSION_SAVE_EVERY_REQUEST = True  # This extends session on each request
 # Database-backed sessions (recommended for production)
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-# Bypass Django MariaDB 10.5 version check for older XAMPP database
-import django.db.backends.mysql.base as mysql_base
-if hasattr(mysql_base, 'DatabaseWrapper'):
-    mysql_base.DatabaseWrapper.check_database_version_supported = lambda self: None
+# Bypass Django MariaDB version check and RETURNING clauses for old XAMPP MariaDB 10.4.x
+# Only enabled locally via MARIADB_COMPAT=True in .env
+if os.environ.get('MARIADB_COMPAT', 'False') == 'True':
+    import django.db.backends.mysql.base as mysql_base
+    if hasattr(mysql_base, 'DatabaseWrapper'):
+        mysql_base.DatabaseWrapper.check_database_version_supported = lambda self: None
 
-# Disable RETURNING clauses since ancient MariaDB 10.4.32 doesn't support them
-import django.db.backends.mysql.features as mysql_features
-mysql_features.DatabaseFeatures.can_return_columns_from_insert = property(lambda self: False)
-mysql_features.DatabaseFeatures.can_return_rows_from_bulk_insert = property(lambda self: False)
+    import django.db.backends.mysql.features as mysql_features
+    mysql_features.DatabaseFeatures.can_return_columns_from_insert = property(lambda self: False)
+    mysql_features.DatabaseFeatures.can_return_rows_from_bulk_insert = property(lambda self: False)
