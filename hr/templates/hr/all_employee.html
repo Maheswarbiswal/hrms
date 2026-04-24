@@ -1,0 +1,1076 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}All Employees - HR System{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #4361ee;
+        --primary-light: #4895ef;
+        --secondary: #7209b7;
+        --accent: #4cc9f0;
+        --warning: #f72585;
+        --success: #10b981;
+        --dark: #1a1a2e;
+        --light: #f8f9fa;
+        --gray-100: #f8f9fa;
+        --gray-200: #e9ecef;
+        --gray-300: #dee2e6;
+        --gray-400: #ced4da;
+        --gray-500: #adb5bd;
+        --gray-600: #6c757d;
+        --gray-700: #495057;
+        --gray-800: #343a40;
+        --gray-900: #212529;
+        --white: #ffffff;
+        --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+        --hover-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
+
+    .page-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Header */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--gray-200);
+        flex-wrap: wrap;
+        gap: 16px;
+        width: 100%;
+    }
+
+    .page-header h1 {
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--dark);
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        flex-wrap: wrap;
+    }
+
+    .page-header h1 i {
+        color: var(--primary);
+        background: rgba(67, 97, 238, 0.1);
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .page-subtitle {
+        font-size: 16px;
+        color: var(--gray-600);
+        margin-top: 4px;
+    }
+
+    .date-badge {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    /* Table Section */
+    .table-section {
+        background: var(--white);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--gray-200);
+        width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        max-height: 800px;
+    }
+
+    .table-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--gray-200);
+        background: var(--white);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        flex-shrink: 0;
+    }
+
+    .table-header h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        flex-wrap: wrap;
+    }
+
+    .total-badge {
+        background: var(--primary);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-left: 10px;
+        white-space: nowrap;
+    }
+
+    /* Scrollable Table Container - FIXED */
+    .table-container {
+        padding: 0 24px 24px 24px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        flex: 1;
+        max-height: 600px;
+        position: relative;
+    }
+
+    /* Employee Table - SINGLE DEFINITION */
+    .employees-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .employees-table thead {
+        background: var(--gray-100);
+    }
+
+    .employees-table thead tr {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .employees-table th {
+        padding: 16px 20px;
+        text-align: center !important;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-700);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--gray-200);
+        white-space: nowrap;
+        background: var(--gray-100);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .employees-table tbody tr {
+        border-bottom: 1px solid var(--gray-100);
+        transition: all 0.2s ease;
+    }
+
+    .employees-table tbody tr:hover {
+        background: rgba(67, 97, 238, 0.03);
+    }
+
+    .employees-table td {
+        padding: 16px 20px;
+        font-size: 14px;
+        color: var(--gray-800);
+        vertical-align: middle;
+        text-align: center !important;
+        white-space: nowrap;
+    }
+
+    /* Employee ID */
+    .employee-id {
+        font-weight: 600;
+        color: var(--primary);
+        background: rgba(67, 97, 238, 0.1);
+        padding: 6px 12px;
+        border-radius: 8px;
+        display: inline-block;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    /* Employee Name */
+    .employee-name {
+        font-weight: 600;
+        color: var(--dark);
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    /* Contact Info */
+    .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--gray-600);
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .contact-item i {
+        color: var(--primary);
+        width: 14px;
+        flex-shrink: 0;
+    }
+
+    .contact-item span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+    }
+
+    /* Department Badge */
+    .department-badge {
+        background: rgba(114, 9, 183, 0.1);
+        color: var(--secondary);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+        border: 1px solid rgba(114, 9, 183, 0.2);
+        white-space: nowrap;
+    }
+
+    /* Location Badge */
+    .location-badge {
+        background: rgba(76, 201, 240, 0.1);
+        color: #0c4a6e;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+        border: 1px solid rgba(76, 201, 240, 0.2);
+        white-space: nowrap;
+    }
+
+    /* Status Badge */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .badge-active {
+        background: rgba(16, 185, 129, 0.1);
+        color: #065f46;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .badge-inactive {
+        background: rgba(239, 68, 68, 0.1);
+        color: #b91c1c;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-success {
+        background: var(--success);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #0da271;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    /* Table Controls */
+    .table-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .entries-selector {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--gray-600);
+    }
+
+    .entries-selector select {
+        border: 1px solid var(--gray-300);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: var(--dark);
+        background: var(--white);
+        height: 42px;
+        width: auto;
+        min-width: 80px;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .search-box input {
+        border: 1px solid var(--gray-300);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: var(--dark);
+        background: var(--white);
+        height: 42px;
+        width: 280px;
+        box-sizing: border-box;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+
+    .pagination-info {
+        padding: 20px 0;
+        font-size: 14px;
+        color: var(--gray-600);
+    }
+
+    .pagination {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        padding: 20px 0;
+    }
+
+    .pagination button {
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--gray-700);
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .pagination button.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .pagination button:hover:not(.active) {
+        background: var(--gray-100);
+        border-color: var(--gray-300);
+        transform: translateY(-1px);
+    }
+
+    .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        width: 100%;
+    }
+
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--gray-100);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        color: var(--gray-500);
+        font-size: 32px;
+    }
+
+    /* ========== MOBILE FIXES - CRITICAL ========== */
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 12px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+        
+        .page-header h1 {
+            font-size: 22px;
+            width: 100%;
+        }
+        
+        .date-badge {
+            /* width: 100%; */
+            justify-content: center;
+        }
+        
+        .table-section {
+            max-height: 700px;
+            width: 100%;
+        }
+        
+        .table-header {
+            padding: 14px 16px;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+        
+        .table-header h3 {
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .total-badge {
+            margin-left: 0;
+            margin-top: 6px;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .btn-group {
+            width: 100%;
+        }
+        
+        /* CRITICAL: Table container with horizontal scroll */
+        .table-container {
+            padding: 0 12px 16px 12px;
+            max-height: 500px;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            width: 100%;
+        }
+        
+        /* CRITICAL: Force table to be wider than container */
+        .employees-table {
+            width: max-content !important;
+            min-width: 100% !important;
+        }
+        
+        /* CRITICAL: Prevent text wrapping */
+        .employees-table td,
+        .employees-table th {
+            white-space: nowrap !important;
+            padding: 12px 16px !important;
+            font-size: 12px;
+        }
+        
+        /* Style scrollbar */
+        .table-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .table-container::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: 4px;
+        }
+        
+        /* Table controls on mobile */
+        .table-controls {
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+            gap: 12px;
+        }
+        
+        .entries-selector {
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        .entries-selector select {
+            width: 80px;
+        }
+        
+        .search-box {
+            width: 100%;
+        }
+        
+        .search-box input {
+            width: 100%;
+            height: 40px;
+        }
+        
+        .pagination {
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        
+        .pagination-info {
+            text-align: center;
+            width: 100%;
+            font-size: 13px;
+        }
+        
+        .pagination button {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+        
+        /* Adjust badges for mobile */
+        .employee-id, 
+        .department-badge, 
+        .location-badge, 
+        .status-badge {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+        
+        .contact-item {
+            font-size: 11px;
+        }
+        
+        .contact-item span {
+            max-width: 100px;
+        }
+        
+        .contact-item i {
+            width: 12px;
+            font-size: 11px;
+        }
+    }
+
+    /* Small mobile */
+    @media (max-width: 480px) {
+        .page-container {
+            padding: 10px;
+        }
+        
+        .page-header h1 {
+            font-size: 20px;
+        }
+        
+        .page-header h1 i {
+            padding: 8px;
+            font-size: 18px;
+        }
+        
+        .date-badge {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .table-header {
+            padding: 12px 14px;
+        }
+        
+        .employees-table td,
+        .employees-table th {
+            padding: 10px 12px !important;
+            font-size: 11px;
+        }
+        
+        .employee-id, 
+        .department-badge, 
+        .location-badge, 
+        .status-badge {
+            padding: 3px 6px;
+            font-size: 10px;
+        }
+        
+        .contact-item span {
+            max-width: 80px;
+        }
+    }
+
+    /* Tablet */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .page-container {
+            padding: 20px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .employees-table {
+            width: 100%;
+        }
+        
+        .search-box input {
+            width: 220px;
+        }
+    }
+
+    /* Scrollbar styling */
+    .table-container::-webkit-scrollbar {
+        height: 6px;
+        width: 6px;
+        background: var(--gray-100);
+    }
+
+    .table-container::-webkit-scrollbar-track {
+        background: var(--gray-100);
+        border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+        background: var(--gray-400);
+        border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+        background: var(--gray-500);
+    }
+</style>
+
+<div class="page-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1>
+                <i class="fas fa-users"></i>
+                All Employees List
+            </h1>
+            <p class="page-subtitle">View and manage employee records across all branches</p>
+        </div>
+        <div class="date-badge">
+            <i class="fas fa-calendar-alt"></i>
+            {% now "d F Y" %}
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-section">
+        <div class="table-header">
+            <h3>
+                <i class="fas fa-table"></i>
+                Employee Records
+                <span class="total-badge" id="totalRecords">
+                    Total: {{ employees|length }}
+                </span>
+            </h3>
+            <div class="btn-group me-2">
+                <a href="?download=excel" class="btn btn-success btn-sm">
+                    <i class="fas fa-download me-1"></i> Download Excel
+                </a>
+            </div>
+        </div>
+        
+        <!-- Table Controls -->
+        <div style="padding: 0 24px;">
+            <div class="table-controls">
+                <div class="entries-selector">
+                    <label>Show</label>
+                    <select id="pageLengthSelect">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="-1">All</option>
+                    </select>
+                    <span>entries</span>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search employees...">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scrollable Table Container -->
+        <div class="table-container" id="tableContainer">
+            {% if employees %}
+            <table class="employees-table" id="employeesTable">
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Department</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    {% for emp in employees %}
+                    <tr>
+                        <td>
+                            <span class="employee-id">
+                                {{ emp.employee_id }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="employee-name">
+                                {{ emp.first_name }} {{ emp.last_name }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="contact-info">
+                                <span class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span title="{{ emp.email }}">{{ emp.email|truncatechars:18 }}</span>
+                                </span>
+                                <span class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>{{ emp.phone|default:"—" }}</span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if emp.department %}
+                            <span class="department-badge">
+                                {{ emp.department }}
+                            </span>
+                            {% else %}
+                            <span style="color: var(--gray-500);">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if emp.location %}
+                            <span class="location-badge">
+                                {{ emp.location }}
+                            </span>
+                            {% else %}
+                            <span style="color: var(--gray-500);">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if emp.status == "active" %}
+                            <span class="status-badge badge-active">
+                                <i class="fas fa-check-circle"></i>
+                                Active
+                            </span>
+                            {% else %}
+                            <span class="status-badge badge-inactive">
+                                <i class="fas fa-times-circle"></i>
+                                Inactive
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>No Employees Found</h4>
+                <p>There are no employee records to display.</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Pagination -->
+        <div style="padding: 0 24px 24px 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div class="pagination-info" id="paginationInfo">
+                    Showing 1 to {{ employees|length }} of {{ employees|length }} entries
+                </div>
+                <div class="pagination" id="paginationControls">
+                    <button id="prevPage" disabled><i class="fas fa-chevron-left"></i></button>
+                    <button class="active">1</button>
+                    <button id="nextPage" disabled><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<!-- Simple JavaScript for table functionality -->
+<script>
+    $(document).ready(function() {
+        // Get all employees data from Django
+        var employees = [
+            {% for emp in employees %}
+            {
+                id: "{{ emp.employee_id|escapejs }}",
+                name: "{{ emp.first_name|escapejs }} {{ emp.last_name|escapejs }}",
+                email: "{{ emp.email|escapejs }}",
+                phone: "{{ emp.phone|default:'—'|escapejs }}",
+                department: "{{ emp.department|default:'—'|escapejs }}",
+                location: "{{ emp.location|default:'—'|escapejs }}",
+                status: "{{ emp.status|escapejs }}"
+            },
+            {% endfor %}
+        ];
+
+        var currentPage = 1;
+        var pageSize = 25;
+        var filteredData = employees;
+        var totalRecords = employees.length;
+
+        // Update total records count
+        $('#totalRecords').text('Total: ' + totalRecords);
+
+        // Function to render table
+        function renderTable() {
+            var start = (currentPage - 1) * pageSize;
+            var end = start + pageSize;
+            var pageData = filteredData.slice(start, end);
+            
+            var tbody = $('#tableBody');
+            tbody.empty();
+            
+            if (pageData.length === 0) {
+                $('.table-container').html(`
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>No Employees Found</h4>
+                        <p>There are no employee records to display.</p>
+                    </div>
+                `);
+                return;
+            }
+            
+            $.each(pageData, function(index, emp) {
+                var statusBadge = emp.status === 'active' ? 
+                    '<span class="status-badge badge-active"><i class="fas fa-check-circle"></i> Active</span>' : 
+                    '<span class="status-badge badge-inactive"><i class="fas fa-times-circle"></i> Inactive</span>';
+                
+                var departmentBadge = emp.department !== '—' ?
+                    '<span class="department-badge">' + emp.department + '</span>' :
+                    '<span style="color: var(--gray-500);">—</span>';
+                
+                var locationBadge = emp.location !== '—' ?
+                    '<span class="location-badge"> ' + emp.location + '</span>' :
+                    '<span style="color: var(--gray-500);">—</span>';
+                
+                var row = '<tr>' +
+                    '<td><span class="employee-id">' + emp.id + '</span></td>' +
+                    '<td><span class="employee-name">' + emp.name + '</span></td>' +
+                    '<td>' +
+                        '<div class="contact-info">' +
+                            '<span class="contact-item"><i class="fas fa-envelope"></i><span title="' + emp.email + '">' + (emp.email.length > 18 ? emp.email.substring(0, 18) + '...' : emp.email) + '</span></span>' +
+                            '<span class="contact-item"><i class="fas fa-phone"></i><span>' + emp.phone + '</span></span>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td>' + departmentBadge + '</td>' +
+                    '<td>' + locationBadge + '</td>' +
+                    '<td>' + statusBadge + '</td>' +
+                '</tr>';
+                
+                tbody.append(row);
+            });
+            
+            updatePaginationInfo();
+            updatePaginationButtons();
+            
+            // Ensure sticky header works
+            fixStickyHeader();
+        }
+
+        // Update pagination info
+        function updatePaginationInfo() {
+            if (filteredData.length === 0) {
+                $('#paginationInfo').text('Showing 0 to 0 of 0 entries');
+                return;
+            }
+            var start = (currentPage - 1) * pageSize + 1;
+            var end = Math.min(currentPage * pageSize, filteredData.length);
+            $('#paginationInfo').text('Showing ' + start + ' to ' + end + ' of ' + filteredData.length + ' entries');
+        }
+
+        // Update pagination buttons
+        function updatePaginationButtons() {
+            var totalPages = Math.ceil(filteredData.length / pageSize);
+            var pagination = $('#paginationControls');
+            pagination.empty();
+            
+            if (totalPages === 0) {
+                pagination.append('<button disabled><i class="fas fa-chevron-left"></i></button>');
+                pagination.append('<button class="active">1</button>');
+                pagination.append('<button disabled><i class="fas fa-chevron-right"></i></button>');
+                return;
+            }
+            
+            // Previous button
+            var prevBtn = $('<button id="prevPage"><i class="fas fa-chevron-left"></i></button>');
+            if (currentPage === 1) {
+                prevBtn.prop('disabled', true);
+            }
+            prevBtn.on('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                }
+            });
+            pagination.append(prevBtn);
+            
+            // Page numbers
+            var startPage = Math.max(1, currentPage - 2);
+            var endPage = Math.min(totalPages, currentPage + 2);
+            
+            if (startPage > 1) {
+                pagination.append($('<button>1</button>').on('click', function() { currentPage = 1; renderTable(); }));
+                if (startPage > 2) {
+                    pagination.append($('<span>...</span>').css({ 'padding': '8px', 'color': 'var(--gray-600)' }));
+                }
+            }
+            
+            for (var i = startPage; i <= endPage; i++) {
+                var btn = $('<button>' + i + '</button>');
+                if (i === currentPage) {
+                    btn.addClass('active');
+                }
+                btn.on('click', (function(page) {
+                    return function() {
+                        currentPage = page;
+                        renderTable();
+                    };
+                })(i));
+                pagination.append(btn);
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pagination.append($('<span>...</span>').css({ 'padding': '8px', 'color': 'var(--gray-600)' }));
+                }
+                pagination.append($('<button>' + totalPages + '</button>').on('click', function() { currentPage = totalPages; renderTable(); }));
+            }
+            
+            // Next button
+            var nextBtn = $('<button id="nextPage"><i class="fas fa-chevron-right"></i></button>');
+            if (currentPage === totalPages) {
+                nextBtn.prop('disabled', true);
+            }
+            nextBtn.on('click', function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                }
+            });
+            pagination.append(nextBtn);
+        }
+
+        // Search functionality
+        $('#searchInput').on('keyup', function() {
+            var searchTerm = $(this).val().toLowerCase();
+            filteredData = employees.filter(function(emp) {
+                return emp.id.toLowerCase().includes(searchTerm) ||
+                       emp.name.toLowerCase().includes(searchTerm) ||
+                       emp.email.toLowerCase().includes(searchTerm) ||
+                       emp.department.toLowerCase().includes(searchTerm) ||
+                       emp.location.toLowerCase().includes(searchTerm) ||
+                       emp.status.toLowerCase().includes(searchTerm);
+            });
+            currentPage = 1;
+            renderTable();
+        });
+
+        // Page length change
+        $('#pageLengthSelect').on('change', function() {
+            var val = $(this).val();
+            pageSize = val === '-1' ? filteredData.length : parseInt(val);
+            currentPage = 1;
+            renderTable();
+        });
+
+        // Initial render
+        if (employees.length > 0) {
+            renderTable();
+        }
+
+        // Fix sticky header
+        function fixStickyHeader() {
+            $('.employees-table thead tr').css({
+                'position': 'sticky',
+                'top': '0',
+                'z-index': '10'
+            });
+            $('.employees-table th').css({
+                'position': 'sticky',
+                'top': '0',
+                'z-index': '10',
+                'background': 'var(--gray-100)'
+            });
+        }
+
+        fixStickyHeader();
+    });
+</script>
+
+<!-- Test for mobile horizontal scroll -->
+<script>
+    $(window).on('load resize', function() {
+        if ($(window).width() <= 768) {
+            $('.table-container').css('overflow-x', 'auto');
+            $('.employees-table').css('width', 'max-content');
+            $('.employees-table td, .employees-table th').css('white-space', 'nowrap');
+        } else {
+            $('.employees-table').css('width', '100%');
+        }
+    });
+</script>
+{% endblock %}

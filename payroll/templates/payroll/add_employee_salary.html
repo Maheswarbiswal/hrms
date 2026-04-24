@@ -1,0 +1,1732 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Employee Salary - HRMS{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    :root {
+        --primary: #4361ee;
+        --primary-light: #4895ef;
+        --secondary: #7209b7;
+        --accent: #4cc9f0;
+        --warning: #f72585;
+        --success: #10b981;
+        --dark: #1a1a2e;
+        --light: #f8f9fa;
+        --gray-100: #f8f9fa;
+        --gray-200: #e9ecef;
+        --gray-300: #dee2e6;
+        --gray-400: #ced4da;
+        --gray-500: #adb5bd;
+        --gray-600: #6c757d;
+        --gray-700: #495057;
+        --gray-800: #343a40;
+        --gray-900: #212529;
+        --white: #ffffff;
+        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #f8fafc;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: var(--gray-800);
+    }
+
+    .page-container {
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 24px;
+    }
+
+    /* Page Header */
+    .page-header {
+        color: black;
+        padding: 10px 20px;
+        margin-bottom: 32px;
+        position: relative;
+        overflow: hidden;
+        z-index: 100;
+    }
+
+    .page-header h1 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .breadcrumb-item {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .breadcrumb-item.active {
+        color: black;
+        font-weight: 500;
+    }
+
+    .breadcrumb-item a {
+        color: rgb(82, 32, 209);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .breadcrumb-item a:hover {
+        color: black;
+        text-decoration: underline;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "/";
+        color: black;
+        padding: 0 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: var(--white);
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        border: none;
+        padding: 10px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    }
+
+    .btn-secondary {
+        background: #e2e8f0;
+        color: #1e293b;
+        border: 1px solid #cbd5e1;
+        padding: 10px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #cbd5e1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Card Styles */
+    .custom-card {
+        background: var(--white);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--gray-200);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .custom-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--primary-light);
+    }
+
+    .custom-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .card-header {
+        margin: -32px -32px 32px -32px;
+        padding: 24px 32px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-bottom: 1px solid var(--gray-200);
+        border-radius: 24px 24px 0 0;
+    }
+
+    .card-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .card-title i {
+        color: var(--primary);
+        font-size: 20px;
+    }
+
+    /* Form Styles */
+    .form-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-label.required::after {
+        content: " *";
+        color: var(--warning);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid var(--gray-300);
+        border-radius: 12px;
+        font-size: 15px;
+        color: var(--gray-800);
+        background: var(--white);
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+    }
+
+    .form-control[readonly] {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, rgba(114, 9, 183, 0.05) 100%);
+        border-color: var(--gray-200);
+        color: var(--gray-700);
+        cursor: not-allowed;
+    }
+
+    /* Search Box Styles */
+    .employee-search-box {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .search-input-group {
+        position: relative;
+        width: 300px;
+    }
+    
+    .search-input-group i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-500);
+        font-size: 14px;
+    }
+    
+    .search-input-group input {
+        width: 100%;
+        padding: 10px 12px 10px 36px;
+        border: 2px solid var(--gray-300);
+        border-radius: 12px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+    
+    .search-input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    
+    .search-results-count {
+        font-size: 13px;
+        color: var(--gray-600);
+        background: var(--gray-100);
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    /* Table Styles */
+    .table-responsive {
+        border-radius: 16px;
+        overflow-x: auto;
+        border: 1px solid var(--gray-200);
+        background: var(--white);
+    }
+
+    .table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    .table thead th {
+        background: #f1f5f9;
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--gray-200);
+        padding: 14px 16px;
+        white-space: nowrap;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+        background: var(--white);
+    }
+
+    .table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .table tbody td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--gray-200);
+        vertical-align: middle;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .table tbody tr.hidden-row {
+        display: none;
+    }
+
+    /* Checkbox Styles */
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--primary);
+    }
+
+    /* Badge Styles */
+    .badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        border: none;
+    }
+
+    .badge.bg-success {
+        background: linear-gradient(135deg, var(--success) 0%, #0ca678 100%) !important;
+    }
+
+    .badge.bg-danger {
+        background: linear-gradient(135deg, var(--warning) 0%, #e63946 100%) !important;
+    }
+
+    .badge.bg-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+    }
+
+    /* Input Group Styles */
+    .input-group {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--gray-300);
+        transition: all 0.2s ease;
+    }
+
+    .input-group:focus-within {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+    }
+
+    .input-group-text {
+        background: var(--gray-100);
+        border: none;
+        color: var(--gray-700);
+        font-weight: 600;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    .input-group .form-control {
+        border: none;
+        border-radius: 0;
+        padding: 10px 12px;
+        box-shadow: none;
+    }
+
+    /* Section Headers */
+    h6 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--dark);
+    }
+
+    h6 i {
+        font-size: 18px;
+        color: var(--primary);
+    }
+
+    /* Detailed Breakdown Table - Main Data Table */
+    .detailed-breakdown-container {
+        max-height: 550px;
+        overflow-y: auto;
+        border-radius: 16px;
+        border: 1px solid var(--gray-200);
+        background: var(--white);
+        margin-top: 16px;
+    }
+    
+    .detailed-breakdown-table {
+        margin: 0;
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+    
+    .detailed-breakdown-table thead {
+        position: sticky;
+        top: 0;
+        background: var(--gray-100);
+        z-index: 10;
+    }
+    
+    .detailed-breakdown-table thead th {
+        background: var(--gray-100);
+        color: var(--gray-800);
+        padding: 12px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        border-bottom: 2px solid var(--gray-300);
+    }
+    
+    .detailed-breakdown-table tbody td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--gray-200);
+        vertical-align: middle;
+    }
+    
+    .detailed-breakdown-table tbody tr:hover {
+        background: #f8fafc;
+    }
+    
+    .detailed-breakdown-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .detailed-breakdown-table tbody tr.detail-hidden-row {
+        display: none;
+    }
+    
+    .component-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+    }
+    
+    .component-badge.earning {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+    }
+    
+    .component-badge.deduction {
+        background: rgba(247, 37, 133, 0.15);
+        color: var(--warning);
+    }
+    
+    .fixed-input-cell {
+        min-width: 120px;
+    }
+    
+    .fixed-input-cell input {
+        width: 100%;
+        padding: 6px 10px;
+        border: 1px solid var(--gray-300);
+        border-radius: 8px;
+        font-size: 12px;
+    }
+    
+    .fixed-input-cell input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+    }
+    
+    .amount-cell {
+        font-weight: 500;
+        text-align: right;
+    }
+    
+    .net-salary-cell {
+        font-weight: 800;
+        color: var(--primary);
+        font-size: 14px;
+        text-align: right;
+    }
+    
+    .ctc-cell {
+        font-weight: 800;
+        color: var(--secondary);
+        font-size: 14px;
+        text-align: right;
+    }
+    
+    .basic-salary-input-table {
+        width: 110px;
+        padding: 6px 8px;
+        border: 1px solid var(--gray-300);
+        border-radius: 8px;
+        font-size: 12px;
+        text-align: right;
+    }
+    
+    .basic-salary-input-table:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+    }
+    
+    /* Arrow indicators */
+    .trend-icon-up {
+        color: var(--success);
+        margin-left: 4px;
+        font-size: 10px;
+    }
+    
+    .trend-icon-down {
+        color: var(--warning);
+        margin-left: 4px;
+        font-size: 10px;
+    }
+    
+    .component-header {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    /* Remove button style */
+    .remove-emp-btn {
+        background: none;
+        border: none;
+        color: var(--warning);
+        cursor: pointer;
+        font-size: 16px;
+        padding: 4px 8px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+    
+    .remove-emp-btn:hover {
+        background: rgba(247, 37, 133, 0.1);
+        transform: scale(1.1);
+    }
+    
+    /* Detail search box */
+    .detail-search-box {
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .detail-search-input-group {
+        position: relative;
+        width: 280px;
+    }
+    
+    .detail-search-input-group i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-500);
+        font-size: 14px;
+    }
+    
+    .detail-search-input-group input {
+        width: 100%;
+        padding: 8px 12px 8px 36px;
+        border: 2px solid var(--gray-300);
+        border-radius: 10px;
+        font-size: 13px;
+        transition: all 0.2s ease;
+    }
+    
+    .detail-search-input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    
+    .detail-search-results {
+        font-size: 12px;
+        color: var(--gray-600);
+        background: var(--gray-100);
+        padding: 4px 10px;
+        border-radius: 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .detailed-breakdown-container {
+            overflow-x: auto;
+        }
+        .detailed-breakdown-table {
+            min-width: 1000px;
+        }
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.5s ease;
+    }
+
+    .slide-up {
+        animation: slideUp 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--gray-300);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Toolbar */
+    .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    .selected-count {
+        background: var(--gray-100);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+    
+    .selected-count span {
+        color: var(--primary);
+        font-weight: 700;
+    }
+</style>
+
+<div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header fade-in">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="mb-2">Add Employee Salary</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{% url 'employee_salaries' %}">Employee Salaries</a></li>
+                        <li class="breadcrumb-item active">Add Salary</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'employee_salaries' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Salaries
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="custom-card slide-up">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-plus-circle"></i> Salary Structure Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="salaryForm">
+                        {% csrf_token %}
+                        
+                        <!-- Basic Information -->
+                        <div class="row mb-4">
+                            <!-- Employee Multi-Select Table -->
+                            <div class="col-12 mb-4">
+                                <label class="form-label required">
+                                    <i class="fas fa-users me-2"></i>Select Employees
+                                </label>
+                                
+                                <!-- Search Box -->
+                                <div class="employee-search-box">
+                                    <div class="search-input-group">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="employeeSearchInput" placeholder="Search by name, ID, or designation...">
+                                    </div>
+                                    <div class="search-input-group">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <select id="locationFilter" class="form-control" style="padding-left: 36px;">
+                                            <option value="">All Locations</option>
+                                            {% for loc in locations %}
+                                            <option value="{{ loc.name }}">{{ loc.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="search-results-count" id="searchResultsCount">
+                                        Showing all employees
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table" id="employeeTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 50px;"><input type="checkbox" id="selectAll"></th>
+                                                <th>Name</th>
+                                                <th>Employee ID</th>
+                                                <th>Designation</th>
+                                                <th>Location</th>
+                                                <th>Fixed Salary</th>
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody id="employeeTableBody">
+                                            {% for emp in employees %}
+                                            <tr data-employee-id="{{ emp.id }}" data-basic-salary="{{ emp.basic_salary }}" class="employee-row">
+                                                <td>
+                                                    <input type="checkbox" class="empCheckbox"
+                                                           name="employee"
+                                                           value="{{ emp.id }}"
+                                                           data-name="{{ emp.first_name }} {{ emp.last_name }}"
+                                                           data-id="{{ emp.employee_id }}"
+                                                           data-designation="{{ emp.designation }}"
+                                                           data-salary="{{ emp.basic_salary }}"
+                                                           data-ctc="{{ emp.ctc }}">
+                                                </td>
+                                                <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+                                                <td>{{ emp.employee_id }}</td>
+                                                <td>{{ emp.designation }}</td>
+                                                <td>{{ emp.location }}</td>
+                                                <td>₹{{ emp.basic_salary|floatformat:2 }}</td>
+                                               
+                                            </tr>
+                                            {% empty %}
+                                            <tr class="employee-row">
+                                                <td colspan="6" class="text-center text-muted py-4">No employees found.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar-alt me-2"></i>Effective Date <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="effectiveDate" name="effective_date" value="{{ today_date|date:'Y-m-d' }}" required>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Salary Breakdown Data Table (All Employees in One Table) -->
+                        <div class="row mt-4" id="detailedSection" style="display: none;">
+                            <div class="col-12">
+                                <div class="toolbar">
+                                    <h6><i class="fas fa-table me-2"></i> Detailed Salary Breakdown</h6>
+                                    <div class="selected-count" id="selectedCountDisplay">
+                                        <i class="fas fa-users me-1"></i> <span id="employeeCount">0</span> Employee(s) Selected
+                                    </div>
+                                </div>
+                                
+                                <!-- Detail Table Search Box -->
+                                <div class="detail-search-box">
+                                    <div class="detail-search-input-group">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="detailSearchInput" placeholder="Search in breakdown...">
+                                    </div>
+                                    <div class="detail-search-results" id="detailSearchResults">
+                                        Showing all
+                                    </div>
+                                </div>
+                                
+                                <div class="detailed-breakdown-container">
+                                    <table class="detailed-breakdown-table" id="detailedBreakdownTable">
+                                        <thead>
+                                            <tr id="tableHeaderRow">
+                                                <th>Action</th>
+                                                <th>Employee</th>
+                                                <th>Emp ID</th>
+                                                <th>Basic Salary</th>
+                                                {% for component in components %}
+                                                <th>
+                                                    <div class="component-header">
+                                                        {{ component.name }}
+                                                        {% if component.component_type == 'earning' %}
+                                                            <i class="fas fa-arrow-up trend-icon-up"></i>
+                                                        {% else %}
+                                                            <i class="fas fa-arrow-down trend-icon-down"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                    <br>
+                                                    
+                                                </th>
+                                                {% endfor %}
+                                                <th>Total Earnings</th>
+                                                <th>Total Deductions</th>
+                                                <th>Net Salary</th>
+                                                <th>CTC (Monthly)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="detailedBreakdownBody">
+                                            <!-- Dynamic rows for each employee -->
+                                        </tbody>
+                                        <tfoot id="detailedBreakdownFooter" style="background: #f1f5f9; font-weight: 700;">
+                                            <!-- Footer totals row -->
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary" id="saveButton">
+                                <i class="fas fa-save me-2"></i>Save Salary Structure
+                            </button>
+                            <a href="{% url 'employee_salaries' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    // Initialize flatpickr for date input
+    flatpickr("#effectiveDate", {
+        dateFormat: "d-m-Y",
+        defaultDate: "{{ today_date|date:'d-m-Y' }}",
+        altInput: true,
+        altFormat: "d-m-Y",
+        allowInput: false,
+        onChange: function(selectedDates) {
+            // When effective date changes, re-fetch all selected employees' LOP data
+            if (selectedEmployeesData.size > 0) {
+                employeeDataCache.clear(); // Clear cache so new month is fetched
+                updateSelectedEmployees();
+            }
+        }
+    });
+
+    // ─── Helper: extract month & year from the effective date field ───────────
+    // flatpickr dateFormat is 'd-m-Y'  →  stored value = '20-04-2026'
+    //   parts[0] = day (20), parts[1] = month (04), parts[2] = year (2026)
+    function getSelectedMonthYear() {
+        const raw = document.getElementById('effectiveDate').value;
+        if (raw) {
+            const parts = raw.split('-');
+            if (parts.length === 3) {
+                const month = parseInt(parts[1]);   // e.g. 04
+                const year  = parseInt(parts[2]);   // e.g. 2026  ← FIXED (was parts[0] = day!)
+                console.log(`[LOP] Effective date raw='${raw}' → month=${month}, year=${year}`);
+                return { month, year };
+            }
+        }
+        // Fallback to current month/year
+        const today = new Date();
+        return { month: today.getMonth() + 1, year: today.getFullYear() };
+    }
+
+    // ================= SEARCH FUNCTIONALITY FOR EMPLOYEE SELECTION TABLE =================
+    const searchInput = document.getElementById('employeeSearchInput');
+    const locationFilter = document.getElementById('locationFilter');
+    const employeeRows = document.querySelectorAll('#employeeTableBody .employee-row');
+    const searchResultsCount = document.getElementById('searchResultsCount');
+    
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const selectedLocation = locationFilter.value.toLowerCase().trim();
+        let visibleCount = 0;
+        
+        employeeRows.forEach(row => {
+            if (row.cells.length < 2) return;
+            
+            const name = row.cells[1]?.textContent.toLowerCase() || '';
+            const empId = row.cells[2]?.textContent.toLowerCase() || '';
+            const designation = row.cells[3]?.textContent.toLowerCase() || '';
+            const location = row.cells[4]?.textContent.toLowerCase().trim() || '';
+            
+            const matchesSearch = searchTerm === '' || 
+                name.includes(searchTerm) || 
+                empId.includes(searchTerm) || 
+                designation.includes(searchTerm);
+                
+            const matchesLocation = selectedLocation === '' || location === selectedLocation;
+            
+            if (matchesSearch && matchesLocation) {
+                row.classList.remove('hidden-row');
+                visibleCount++;
+            } else {
+                row.classList.add('hidden-row');
+                const checkbox = row.querySelector('.empCheckbox');
+                if (checkbox && checkbox.checked) {
+                    checkbox.checked = false;
+                }
+            }
+        });
+        
+        if (searchTerm === '' && selectedLocation === '') {
+            searchResultsCount.textContent = `Showing all ${visibleCount} employees`;
+        } else {
+            searchResultsCount.textContent = `Found ${visibleCount} employee(s) matching your filters`;
+        }
+        
+        updateSelectAllState();
+    }
+    
+    if (locationFilter) {
+        locationFilter.addEventListener('change', performSearch);
+    }
+    
+    function updateSelectAllState() {
+        const visibleCheckboxes = Array.from(document.querySelectorAll('#employeeTableBody .employee-row:not(.hidden-row) .empCheckbox'));
+        const allChecked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.checked);
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = !allChecked && visibleCheckboxes.some(cb => cb.checked);
+        }
+    }
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', performSearch);
+    }
+    
+    // ================= SEARCH FUNCTIONALITY FOR DETAILED BREAKDOWN TABLE =================
+    let detailSearchTimeout = null;
+    const detailSearchInput = document.getElementById('detailSearchInput');
+    const detailSearchResults = document.getElementById('detailSearchResults');
+    
+    function performDetailSearch() {
+        const searchTerm = detailSearchInput.value.toLowerCase().trim();
+        const detailRows = document.querySelectorAll('#detailedBreakdownBody tr');
+        let visibleCount = 0;
+        
+        detailRows.forEach(row => {
+            if (!row.id || row.id === '') return;
+            
+            const employeeNameCell = row.cells[1];
+            const empIdCell = row.cells[2];
+            
+            const employeeName = employeeNameCell?.textContent.toLowerCase() || '';
+            const empId = empIdCell?.textContent.toLowerCase() || '';
+            
+            const matches = searchTerm === '' || 
+                employeeName.includes(searchTerm) || 
+                empId.includes(searchTerm);
+            
+            if (matches) {
+                row.classList.remove('detail-hidden-row');
+                visibleCount++;
+            } else {
+                row.classList.add('detail-hidden-row');
+            }
+        });
+        
+        if (searchTerm === '') {
+            detailSearchResults.textContent = `Showing all ${visibleCount} employees`;
+        } else {
+            detailSearchResults.textContent = `Found ${visibleCount} employee(s) matching "${searchTerm}"`;
+        }
+        
+        updateFooterTotalsForVisibleRows();
+    }
+    
+    function updateFooterTotalsForVisibleRows() {
+        const visibleRows = document.querySelectorAll('#detailedBreakdownBody tr:not(.detail-hidden-row)');
+        let totalEarningsAll = 0;
+        let totalDeductionsAll = 0;
+        let totalNetAll = 0;
+        let totalCtcAll = 0;
+        
+        visibleRows.forEach(row => {
+            const earningsCell = row.querySelector('[id^="earnings-"]');
+            const deductionsCell = row.querySelector('[id^="deductions-"]');
+            const netCell = row.querySelector('[id^="net-"]');
+            const ctcCell = row.querySelector('[id^="ctc-"]');
+            
+            if (earningsCell) {
+                const earningsValue = parseFloat(earningsCell.textContent.replace('₹', '').replace(/,/g, '')) || 0;
+                totalEarningsAll += earningsValue;
+            }
+            if (deductionsCell) {
+                const deductionsValue = parseFloat(deductionsCell.textContent.replace('₹', '').replace(/,/g, '')) || 0;
+                totalDeductionsAll += deductionsValue;
+            }
+            if (netCell) {
+                const netValue = parseFloat(netCell.textContent.replace('₹', '').replace(/,/g, '')) || 0;
+                totalNetAll += netValue;
+            }
+            if (ctcCell) {
+                const ctcValue = parseFloat(ctcCell.textContent.replace('₹', '').replace(/,/g, '')) || 0;
+                totalCtcAll += ctcValue;
+            }
+        });
+        
+        const footerEarnings = document.getElementById('footerEarnings');
+        const footerDeductions = document.getElementById('footerDeductions');
+        const footerNet = document.getElementById('footerNet');
+        const footerCtc = document.getElementById('footerCtc');
+        
+        if (footerEarnings) footerEarnings.innerHTML = `₹${totalEarningsAll.toFixed(2)}`;
+        if (footerDeductions) footerDeductions.innerHTML = `₹${totalDeductionsAll.toFixed(2)}`;
+        if (footerNet) footerNet.innerHTML = `₹${totalNetAll.toFixed(2)}`;
+        if (footerCtc) footerCtc.innerHTML = `₹${totalCtcAll.toFixed(2)}`;
+    }
+    
+    if (detailSearchInput) {
+        detailSearchInput.addEventListener('input', function() {
+            if (detailSearchTimeout) clearTimeout(detailSearchTimeout);
+            detailSearchTimeout = setTimeout(performDetailSearch, 300);
+        });
+    }
+    
+    // ================= SALARY COMPONENTS DATA FROM BACKEND =================
+    const salaryComponents = [
+        {% for component in components %}
+        {
+            id: {{ component.id }},
+            name: "{{ component.name|escapejs }}",
+            component_type: "{{ component.component_type }}",
+            calculation_type: "{{ component.calculation_type }}",
+            value: {{ component.value|default:0 }},
+            formula: "{{ component.formula|escapejs }}"
+        },
+        {% endfor %}
+    ];
+
+    // ================= EMPLOYEE MULTI-SELECT LOGIC =================
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const employeeCheckboxes = document.querySelectorAll('.empCheckbox');
+    const detailedSection = document.getElementById('detailedSection');
+    const detailedBreakdownBody = document.getElementById('detailedBreakdownBody');
+    const detailedBreakdownFooter = document.getElementById('detailedBreakdownFooter');
+    const employeeCountSpan = document.getElementById('employeeCount');
+    
+    let selectedEmployeesData = new Map();
+    let employeeDataCache = new Map();
+
+    async function fetchEmployeeData(employeeId, basicSalary) {
+        const { month, year } = getSelectedMonthYear();
+        const cacheKey = `${employeeId}_${month}_${year}`;
+
+        if (employeeDataCache.has(cacheKey)) {
+            return employeeDataCache.get(cacheKey);
+        }
+
+        try {
+            const response = await fetch(`/payroll/api/employee-salary-data/${employeeId}/?month=${month}&year=${year}`);
+            if (response.ok) {
+                const data = await response.json();
+                const employeeData = {
+                    unpaid_leave_balance: data.unpaid_leave_balance || 0,
+                };
+                employeeDataCache.set(cacheKey, employeeData);
+                return employeeData;
+            } else {
+                return { unpaid_leave_balance: 0 };
+            }
+        } catch (error) {
+            console.error('Error loading employee data:', error);
+            return { unpaid_leave_balance: 0 };
+        }
+    }
+
+    function calculateEmployeeSalary(employeeId, basicSalary, componentValues = {}) {
+    let totalEarnings = 0;
+    let totalDeductions = 0;
+    const componentAmounts = {};
+    
+    const { month, year } = getSelectedMonthYear();
+    const cacheKey = `${employeeId}_${month}_${year}`;
+    const empData = employeeDataCache.get(cacheKey) || { unpaid_leave_balance: 0 };
+    const unpaidBalance = empData.unpaid_leave_balance || 0;
+    
+    const monthDays = new Date(year, month, 0).getDate();
+    const earnedSalary = (basicSalary / monthDays) * (monthDays - unpaidBalance);
+    
+    function getDynamicVariables() {
+        return {
+            basic_salary: basicSalary,
+            earned_salary: earnedBasic,
+            per_day_salary: basicSalary / monthDays,
+            unpaid_balance: unpaidBalance,
+            month_days: monthDays,
+            unpaid_leave_amount: unpaidLeaveAmount
+        };
+    }
+    
+    function evaluateFormula(formula, variables) {
+        let evaluatedFormula = formula;
+        for (const [key, value] of Object.entries(variables)) {
+            const regex = new RegExp('\\b' + key + '\\b', 'gi');
+            evaluatedFormula = evaluatedFormula.replace(regex, value);
+        }
+        try {
+            const calculateFunction = new Function('return (' + evaluatedFormula + ')');
+            return calculateFunction();
+        } catch (error) {
+            console.error('Formula evaluation error:', error);
+            return 0;
+        }
+    }
+    
+    let pfAmount = 0;
+    let esiAmount = 0;
+    let professionalTax = 0;
+    let tdsAmount = 0;
+    
+    // Get TDS from componentValues (editable field)
+    const tdsComponent = salaryComponents.find(c => c.name.toUpperCase() === 'TDS');
+    if (tdsComponent && componentValues[tdsComponent.id] !== undefined) {
+        tdsAmount = parseFloat(componentValues[tdsComponent.id]) || 0;
+    }
+    
+    const unpaidLeaveAmount = (basicSalary / monthDays) * unpaidBalance;
+    const earnedBasic = basicSalary - unpaidLeaveAmount;
+    
+    for (const component of salaryComponents) {
+        let amount = 0;
+        const componentName = component.name.toUpperCase();
+        
+        // Auto-calculate UNPAID LEAVE / LOP amount
+        if (componentName === 'UNPAID LEAVE' || componentName === 'LOP') {
+            amount = unpaidLeaveAmount;
+        }
+        else if (component.calculation_type === 'percentage') {
+            if (componentName === 'PF') {
+                const pfBase = Math.min(earnedBasic, 15000);
+                // Use dynamic monthDays instead of hardcoded 31
+                const earnedpf = (pfBase * (monthDays - unpaidBalance)) / monthDays;
+                pfAmount = Math.round(earnedpf * (component.value / 100));
+                amount = pfAmount;
+            }
+            else if (componentName === 'ESI') {
+                // ESI eligibility: check against original basicSalary (contractual),
+                // not earnedBasic (LOP-reduced). If contract salary > 21000, ESI doesn't apply.
+                if (basicSalary <= 21000) {
+                    esiAmount = Math.round(earnedBasic * (component.value / 100));
+                    amount = esiAmount;
+                } else {
+                    esiAmount = 0;
+                    amount = 0;
+                }
+            }
+            else if (componentName === 'PT' || componentName === 'PROFESSIONAL TAX') {
+                amount = 0; // Calculated separately
+            }
+            else if (componentName === 'TDS') {
+                amount = tdsAmount; // Use editable value
+            }
+            else {
+                // Use earnedBasic as the base for other percentage components
+                amount = earnedBasic * (component.value / 100);
+            }
+        } 
+        else if (component.calculation_type === 'formula') {
+            const variables = getDynamicVariables();
+            amount = evaluateFormula(component.formula, variables);
+        } 
+        else if (component.calculation_type === 'fixed') {
+            amount = parseFloat(componentValues[component.id]) || 0;
+        }
+        
+        componentAmounts[component.id] = amount;
+        
+        if (component.component_type === 'earning') {
+            totalEarnings += amount;
+        } else if (component.component_type === 'deduction') {
+            // Don't add PF/ESI/PT/TDS here as they're handled separately
+            // ALSO don't add UNPAID LEAVE to deductions if we already reduced basicSalary to earnedBasic
+            if (!['PF', 'ESI', 'PT', 'PROFESSIONAL TAX', 'TDS', 'UNPAID LEAVE', 'LOP'].includes(componentName)) {
+                totalDeductions += amount;
+            }
+        }
+    }
+    
+    // Add PF and ESI to total deductions
+    totalDeductions += pfAmount + esiAmount;
+    
+    // IMPORTANT: In this logic, the 'unpaid leave' amount is already subtracted from Basic Salary 
+    // to get earnedBasic. So totalEarningsBeforeStatutory is earnedBasic + totalEarnings.
+    console.log('totalEarnings', totalEarnings);
+    console.log('earnedBasic', earnedBasic);
+    const totalEarningsBeforeStatutory = totalEarnings + earnedBasic;
+    console.log('totalEarningsBeforeStatutory', totalEarningsBeforeStatutory);
+    
+    // Calculate Professional Tax (PT)
+    if (totalEarningsBeforeStatutory >= 25000) {
+        professionalTax = 200;
+        const ptComponent = salaryComponents.find(c => 
+            c.name.toUpperCase() === 'PT' || c.name.toUpperCase() === 'PROFESSIONAL TAX'
+        );
+        if (ptComponent) {
+            componentAmounts[ptComponent.id] = professionalTax;
+        }
+        totalDeductions += professionalTax;
+    }
+    
+    // Add TDS to total deductions
+    totalDeductions += tdsAmount;
+    
+    // Calculate final Net Salary
+    const netSalary = earnedSalary + totalEarnings - totalDeductions;
+    const grossSalary = earnedSalary;
+    const employerPf = Math.min(earnedSalary, 15000) * 0.12;
+    const employerEsi = earnedSalary < 21000 ? earnedSalary * 0.0075 : 0;
+    const ctcMonthly = basicSalary + pfAmount + esiAmount + professionalTax;//mousumi
+    
+    return {
+        basicSalary: earnedBasic,
+        originalBasicSalary: basicSalary,
+        totalEarnings: totalEarningsBeforeStatutory,
+        totalDeductions,
+        netSalary,
+        ctcMonthly,
+        grossSalary,
+        componentAmounts,
+        unpaidBalance,
+        earnedSalary: earnedBasic,
+        pfAmount,
+        esiAmount,
+        professionalTax,
+        tdsAmount,
+        monthDays
+    };
+}
+    
+    function renderDetailedBreakdownTable() {
+        if (selectedEmployeesData.size === 0) {
+            detailedBreakdownBody.innerHTML = '<tr><td colspan="' + (5 + salaryComponents.length) + '" class="text-center text-muted py-4">No employees selected. Please select employees from the list above.</td></tr>';
+            detailedBreakdownFooter.innerHTML = '';
+            if (detailSearchInput) detailSearchInput.disabled = true;
+            return;
+        }
+        
+        if (detailSearchInput) detailSearchInput.disabled = false;
+        
+        detailedBreakdownBody.innerHTML = '';
+        let totalEarnedAll = 0;
+        let totalEarningsAll = 0;
+        let totalDeductionsAll = 0;
+        let totalNetAll = 0;
+        let totalCtcAll = 0;
+        
+        for (const [empId, emp] of selectedEmployeesData) {
+            const calc = emp.calculation || calculateEmployeeSalary(empId, emp.basicSalary, emp.componentValues || {});
+            
+            totalEarnedAll += calc.earnedSalary;
+            totalEarningsAll += calc.totalEarnings;
+            totalDeductionsAll += calc.totalDeductions;
+            totalNetAll += calc.netSalary;
+            totalCtcAll += calc.ctcMonthly;
+            
+            const row = document.createElement('tr');
+            row.id = `detail-row-${empId}`;
+            row.className = 'detail-employee-row';
+            
+            let rowHtml = `
+                <td style="text-align: center;">
+                    <button type="button" class="remove-emp-btn" data-employee-id="${empId}" title="Remove Employee">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+                <td>
+                    <strong>${escapeHtml(emp.name)}</strong>
+                    <br><small class="text-muted">${escapeHtml(emp.designation)}</small>
+                </td>
+                <td>${escapeHtml(emp.employeeId)}</td>
+                <td class="amount-cell">
+                    <input type="number" class="basic-salary-input-table" 
+                           data-employee-id="${empId}"
+                           value="${calc.originalBasicSalary}"
+                           step="0.01"
+                           style="width: 110px; text-align: right;">
+                    <br><small class="text-muted">Earned: ₹${calc.earnedSalary.toFixed(2)}</small>
+                </td>
+            `;
+            
+            for (const component of salaryComponents) {
+                const amount = calc.componentAmounts[component.id] || 0;
+                const componentName = component.name.toUpperCase();
+                
+                // Make TDS field editable
+                if (componentName === 'TDS') {
+                    rowHtml += `
+                        <td class="fixed-input-cell">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="component-fixed-input-table" 
+                                       data-employee-id="${empId}"
+                                       data-component-id="${component.id}"
+                                       data-component-type="${component.component_type}"
+                                       value="${(emp.componentValues && emp.componentValues[component.id]) || amount || 0}"
+                                       step="0.01"
+                                       placeholder="0.00"
+                                       style="width: 100px;">
+                            </div>
+                         </td>
+                    `;
+                } else if (component.calculation_type === 'fixed') {
+                    rowHtml += `
+                        <td class="fixed-input-cell">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="component-fixed-input-table" 
+                                       data-employee-id="${empId}"
+                                       data-component-id="${component.id}"
+                                       data-component-type="${component.component_type}"
+                                       value="${(emp.componentValues && emp.componentValues[component.id]) || amount || 0}"
+                                       step="0.01"
+                                       placeholder="0.00"
+                                       style="width: 100px;">
+                            </div>
+                         </td>
+                    `;
+                } else {
+                    let specialClass = '';
+                    if (componentName === 'PF') specialClass = 'text-primary';
+                    else if (componentName === 'ESI') specialClass = 'text-info';
+                    else if (componentName === 'PT' || componentName === 'PROFESSIONAL TAX') specialClass = 'text-warning';
+                    
+                    let displayAmount = amount.toFixed(2);
+                    let daysLabel = '';
+                    
+                    // Show days for UNPAID LEAVE or LOP
+                    if (componentName === 'UNPAID LEAVE' || componentName === 'LOP') {
+                        daysLabel = `<br><small class="text-muted">(${calc.unpaidBalance} days)</small>`;
+                        specialClass += ' text-danger';
+                    }
+                    
+                    rowHtml += `<td class="amount-cell ${specialClass}">₹${displayAmount}${daysLabel}</td>`;
+                }
+            }
+            
+            rowHtml += `
+                <td class="amount-cell text-success" id="earnings-${empId}">₹${calc.totalEarnings.toFixed(2)}</td>
+                <td class="amount-cell text-danger" id="deductions-${empId}">₹${calc.totalDeductions.toFixed(2)}</td>
+                <td class="net-salary-cell" id="net-${empId}">₹${calc.netSalary.toFixed(2)}</td>
+                <td class="ctc-cell" id="ctc-${empId}">₹${calc.ctcMonthly.toFixed(2)}</td>
+            `;
+            
+            row.innerHTML = rowHtml;
+            detailedBreakdownBody.appendChild(row);
+        }
+        
+        detailedBreakdownFooter.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align: right; font-weight: 700;">TOTAL:</td>
+                ${salaryComponents.map(() => '<td style="font-weight: 700;"></td>').join('')}
+                <td class="amount-cell text-success" style="font-weight: 700;" id="footerEarnings">₹${totalEarningsAll.toFixed(2)}</td>
+                <td class="amount-cell text-danger" style="font-weight: 700;" id="footerDeductions">₹${totalDeductionsAll.toFixed(2)}</td>
+                <td class="net-salary-cell" style="font-weight: 700;" id="footerNet">₹${totalNetAll.toFixed(2)}</td>
+                <td class="ctc-cell" style="font-weight: 700;" id="footerCtc">₹${totalCtcAll.toFixed(2)}</td>
+            </tr>
+        `;
+        
+        employeeCountSpan.textContent = selectedEmployeesData.size;
+        
+        attachTableInputListeners();
+        attachRemoveButtonListeners();
+        
+        // Reset and reapply detail search if there's a search term
+        if (detailSearchInput && detailSearchInput.value.trim() !== '') {
+            performDetailSearch();
+        } else if (detailSearchResults) {
+            detailSearchResults.textContent = `Showing all ${selectedEmployeesData.size} employees`;
+        }
+    }
+    
+    function attachRemoveButtonListeners() {
+        document.querySelectorAll('.remove-emp-btn').forEach(btn => {
+            btn.removeEventListener('click', handleRemoveClick);
+            btn.addEventListener('click', handleRemoveClick);
+        });
+    }
+    
+    function handleRemoveClick(e) {
+        const employeeId = parseInt(this.dataset.employeeId);
+        removeEmployee(employeeId);
+    }
+    
+    function attachTableInputListeners() {
+        document.querySelectorAll('.basic-salary-input-table').forEach(input => {
+            input.removeEventListener('change', handleTableBasicSalaryChange);
+            input.addEventListener('change', handleTableBasicSalaryChange);
+        });
+        
+        document.querySelectorAll('.component-fixed-input-table').forEach(input => {
+            input.removeEventListener('change', handleTableFixedComponentChange);
+            input.addEventListener('change', handleTableFixedComponentChange);
+        });
+    }
+    
+    function handleTableBasicSalaryChange(e) {
+        const employeeId = parseInt(e.target.dataset.employeeId);
+        const newBasicSalary = parseFloat(e.target.value) || 0;
+        
+        if (selectedEmployeesData.has(employeeId)) {
+            const emp = selectedEmployeesData.get(employeeId);
+            emp.basicSalary = newBasicSalary;
+            selectedEmployeesData.set(employeeId, emp);
+            
+            const calculation = calculateEmployeeSalary(employeeId, newBasicSalary, emp.componentValues || {});
+            emp.calculation = calculation;
+            
+            updateEmployeeDisplays(employeeId, calculation);
+        }
+        
+        updateFooterTotalsForVisibleRows();
+    }
+    
+    function handleTableFixedComponentChange(e) {
+        const employeeId = parseInt(e.target.dataset.employeeId);
+        const componentId = parseInt(e.target.dataset.componentId);
+        const newValue = parseFloat(e.target.value) || 0;
+        
+        if (selectedEmployeesData.has(employeeId)) {
+            const emp = selectedEmployeesData.get(employeeId);
+            if (!emp.componentValues) emp.componentValues = {};
+            emp.componentValues[componentId] = newValue;
+            
+            const calculation = calculateEmployeeSalary(employeeId, emp.basicSalary, emp.componentValues);
+            emp.calculation = calculation;
+            
+            updateEmployeeDisplays(employeeId, calculation);
+        }
+        
+        updateFooterTotalsForVisibleRows();
+    }
+    
+    function updateEmployeeDisplays(employeeId, calculation) {
+        const detailRow = document.getElementById(`detail-row-${employeeId}`);
+        if (detailRow) {
+            const basicInput = detailRow.querySelector('.basic-salary-input-table');
+            if (basicInput) basicInput.value = calculation.originalBasicSalary;
+            
+            const earnedSpan = detailRow.querySelector('.basic-salary-input-table + br + small');
+            if (earnedSpan) {
+                earnedSpan.innerHTML = `Earned: ₹${calculation.earnedSalary.toFixed(2)}`;
+            }
+            
+            const componentCells = detailRow.querySelectorAll('td');
+            let colIndex = 4;
+            
+            for (const component of salaryComponents) {
+                const amount = calculation.componentAmounts[component.id] || 0;
+                const componentName = component.name.toUpperCase();
+                
+                if (component.calculation_type === 'fixed' || componentName === 'TDS') {
+                    const fixedInput = componentCells[colIndex]?.querySelector('.component-fixed-input-table');
+                    if (fixedInput && parseFloat(fixedInput.value) !== amount && amount !== 0) {
+                        if (fixedInput.value === '0' || fixedInput.value === '') {
+                            fixedInput.value = amount;
+                        }
+                    }
+                } else {
+                    if (componentCells[colIndex]) {
+                        componentCells[colIndex].innerHTML = `₹${amount.toFixed(2)}`;
+                    }
+                }
+                colIndex++;
+            }
+            
+            const earningsCell = document.getElementById(`earnings-${employeeId}`);
+            const deductionsCell = document.getElementById(`deductions-${employeeId}`);
+            const netCell = document.getElementById(`net-${employeeId}`);
+            const ctcCell = document.getElementById(`ctc-${employeeId}`);
+            
+            if (earningsCell) earningsCell.innerHTML = `₹${calculation.totalEarnings.toFixed(2)}`;
+            if (deductionsCell) deductionsCell.innerHTML = `₹${calculation.totalDeductions.toFixed(2)}`;
+            if (netCell) netCell.innerHTML = `₹${calculation.netSalary.toFixed(2)}`;
+            if (ctcCell) ctcCell.innerHTML = `₹${calculation.ctcMonthly.toFixed(2)}`;
+        }
+    }
+    
+    async function removeEmployee(employeeId) {
+        for (const cb of employeeCheckboxes) {
+            if (parseInt(cb.value) === employeeId) {
+                cb.checked = false;
+                break;
+            }
+        }
+        
+        selectedEmployeesData.delete(employeeId);
+        
+        if (selectAllCheckbox) {
+            const visibleCheckboxes = Array.from(document.querySelectorAll('#employeeTableBody .employee-row:not(.hidden-row) .empCheckbox'));
+            const allChecked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.checked);
+            selectAllCheckbox.checked = allChecked;
+        }
+        
+        await renderDetailedSection();
+    }
+    
+    async function renderDetailedSection() {
+        if (selectedEmployeesData.size === 0) {
+            detailedSection.style.display = 'none';
+            if (detailSearchInput) detailSearchInput.disabled = true;
+            return;
+        }
+        
+        detailedSection.style.display = 'block';
+        renderDetailedBreakdownTable();
+    }
+    
+    async function updateSelectedEmployees() {
+        const newlySelected = new Map();
+        
+        for (const cb of employeeCheckboxes) {
+            if (cb.checked) {
+                const empId = parseInt(cb.value);
+                const name = cb.getAttribute('data-name');
+                const employeeIdCode = cb.getAttribute('data-id');
+                const designation = cb.getAttribute('data-designation') || '';
+                const basicSalary = parseFloat(cb.getAttribute('data-salary')) || 0;
+                
+                if (!newlySelected.has(empId)) {
+                    await fetchEmployeeData(empId, basicSalary);
+                    
+                    const existingEmp = selectedEmployeesData.get(empId);
+                    const componentValues = existingEmp ? existingEmp.componentValues : {};
+                    
+                    const calculation = calculateEmployeeSalary(empId, basicSalary, componentValues);
+                    
+                    newlySelected.set(empId, {
+                        id: empId,
+                        name: name,
+                        employeeId: employeeIdCode,
+                        designation: designation,
+                        basicSalary: basicSalary,
+                        componentValues: componentValues,
+                        calculation: calculation
+                    });
+                }
+            }
+        }
+        
+        selectedEmployeesData = newlySelected;
+        await renderDetailedSection();
+        
+        if (selectAllCheckbox) {
+            const visibleCheckboxes = Array.from(document.querySelectorAll('#employeeTableBody .employee-row:not(.hidden-row) .empCheckbox'));
+            const allChecked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.checked);
+            selectAllCheckbox.checked = allChecked;
+        }
+    }
+    
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', async function() {
+            const visibleCheckboxes = document.querySelectorAll('#employeeTableBody .employee-row:not(.hidden-row) .empCheckbox');
+            for (const cb of visibleCheckboxes) {
+                cb.checked = this.checked;
+            }
+            await updateSelectedEmployees();
+        });
+    }
+    
+    employeeCheckboxes.forEach(cb => {
+        cb.addEventListener('change', async function() {
+            await updateSelectedEmployees();
+            updateSelectAllState();
+        });
+    });
+    
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    document.getElementById('salaryForm').addEventListener('submit', function(e) {
+    if (selectedEmployeesData.size === 0) {
+        e.preventDefault();
+        alert('Please select at least one employee.');
+        return false;
+    }
+    
+    // Clear any existing hidden inputs for employees to avoid duplicates
+    const existingEmpInputs = document.querySelectorAll('input[name^="employee_"], input[name="selected_employees"]');
+    existingEmpInputs.forEach(input => input.remove());
+    
+    // Handle date formatting
+    const dateInput = document.getElementById('effectiveDate');
+    let dateValue = dateInput.value;
+    if (dateValue) {
+        // Parse the date from flatpickr format (DD-MM-YYYY)
+        const parts = dateValue.split('-');
+        if (parts.length === 3) {
+            const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            const hiddenDate = document.createElement('input');
+            hiddenDate.type = 'hidden';
+            hiddenDate.name = 'effective_date';
+            hiddenDate.value = formattedDate;
+            dateInput.name = '';
+            dateInput.parentNode.appendChild(hiddenDate);
+        }
+    }
+    
+    // Add all selected employees data
+    const selectedIds = [];
+    
+    for (const [empId, emp] of selectedEmployeesData) {
+        selectedIds.push(empId);
+        
+        const calc = emp.calculation || calculateEmployeeSalary(empId, emp.basicSalary, emp.componentValues || {});
+        
+        // FIXED: Use consistent naming pattern - employee_{id}_fieldname
+        // Basic Salary
+        const basicInput = document.createElement('input');
+        basicInput.type = 'hidden';
+        basicInput.name = `employee_${empId}_basic_salary`;
+        basicInput.value = calc.originalBasicSalary;
+        this.appendChild(basicInput);
+        
+        // Earned Salary (after unpaid leaves)
+        const earnedInput = document.createElement('input');
+        earnedInput.type = 'hidden';
+        earnedInput.name = `employee_${empId}_earned_salary`;
+        earnedInput.value = calc.earnedSalary;
+        this.appendChild(earnedInput);
+        
+        // Component amounts - FIXED naming pattern
+        for (const component of salaryComponents) {
+            const amount = calc.componentAmounts[component.id] || 0;
+            const compInput = document.createElement('input');
+            compInput.type = 'hidden';
+            compInput.name = `employee_${empId}_component_${component.id}`;
+            compInput.value = amount;
+            this.appendChild(compInput);
+        }
+        
+        // Statutory deductions - FIXED naming pattern
+        const unpaidInput = document.createElement('input');
+        unpaidInput.type = 'hidden';
+        unpaidInput.name = `employee_${empId}_unpaid_balance`;
+        unpaidInput.value = calc.unpaidBalance || 0;
+        this.appendChild(unpaidInput);
+        
+        const pfInput = document.createElement('input');
+        pfInput.type = 'hidden';
+        pfInput.name = `employee_${empId}_pf`;
+        pfInput.value = calc.pfAmount || 0;
+        this.appendChild(pfInput);
+        
+        const esiInput = document.createElement('input');
+        esiInput.type = 'hidden';
+        esiInput.name = `employee_${empId}_esi`;
+        esiInput.value = calc.esiAmount || 0;
+        this.appendChild(esiInput);
+        
+        const ptInput = document.createElement('input');
+        ptInput.type = 'hidden';
+        ptInput.name = `employee_${empId}_professional_tax`;
+        ptInput.value = calc.professionalTax || 0;
+        this.appendChild(ptInput);
+        
+        const tdsInput = document.createElement('input');
+        tdsInput.type = 'hidden';
+        tdsInput.name = `employee_${empId}_tds`;
+        tdsInput.value = calc.tdsAmount || 0;
+        this.appendChild(tdsInput);
+    }
+    
+    // Add selected employees list
+    const empListInput = document.createElement('input');
+    empListInput.type = 'hidden';
+    empListInput.name = 'selected_employees';
+    empListInput.value = selectedIds.join(',');
+    this.appendChild(empListInput);
+    
+    // Show loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+    
+    // Allow form to submit
+    return true;
+});
+    
+    async function initialize() {
+        let hasPreSelected = false;
+        for (const cb of employeeCheckboxes) {
+            if (cb.checked) {
+                hasPreSelected = true;
+                break;
+            }
+        }
+        if (hasPreSelected) {
+            await updateSelectedEmployees();
+        }
+        performSearch();
+    }
+    
+    initialize();
+</script>
+{% endblock %}

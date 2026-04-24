@@ -1,0 +1,2698 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add Employee - HR System
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center page-header">
+        <div>
+            <h1 class="h2"style="font-weight:700;">Add New Employee</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'employee_page' %}">Employees</a></li>
+                    <li class="breadcrumb-item active">Add Employee</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <a href="{% url 'employee_page' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Employees
+            </a>
+        </div>
+    </div>
+
+    <!-- Add Employee Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-plus me-2"></i>Employee Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" id="addEmployeeForm">
+                        {% csrf_token %}
+                       
+                        {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Personal Information Section -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2 mb-3 text-primary">
+                                    <i class="fas fa-user me-2"></i>Personal Information
+                                </h6>
+                            </div>
+                           
+                            <div class="col-md-4">
+                                <label class="form-label required">Employee ID</label>
+                                <input type="text" name="employee_id" class="form-control" required
+                                       placeholder="Enter employee ID" autofocus>
+                                <div class="form-text">Unique identifier for the employee</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Biometric ID</label>
+                                <input type="text" name="biometric_id" class="form-control"
+                                       placeholder="Enter Biometric ID" autofocus>
+                                <div class="form-text">ID mapped in the biometric device</div>
+                            </div>
+                           
+                            <div class="col-md-4">
+                                <label class="form-label required">First Name</label>
+                                <input type="text" name="first_name" class="form-control" required
+                                       placeholder="Enter first name" autofocus>
+                            </div>
+                           
+                            <div class="col-md-4">
+                                <label class="form-label">Middle Name</label>
+                                <input type="text" name="middle_name" class="form-control"
+                                       placeholder="Enter middle name" autofocus>
+                            </div>
+                           
+                            <div class="col-md-4">
+                                <label class="form-label required">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" required
+                                       placeholder="Enter last name" autofocus>
+                            </div>
+                           
+                            <div class="col-md-4">
+                                <label class="form-label required">Email</label>
+                                <input type="email" name="email" class="form-control" required
+                                       placeholder="Enter email address" autofocus>
+                            </div>
+                           
+                            <div class="col-md-4">
+                                <label class="form-label required">Gender</label>
+                                <select name="gender" class="form-control" autofocus>
+                                    <option value="">Select Gender</option>
+                                    {% for value, label in gender_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Date of Birth</label>
+                                <input type="text" name="date_of_birth" class="form-control datepicker" placeholder="DD-MM-YYYY" autofocus>                                
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Marital Status</label>
+                                <select name="marital_status" class="form-control" autofocus>
+                                    <option value="">Select Marital Status</option>
+                                    {% for value, label in marital_status_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Marriage Date</label>
+                                <input type="text" name="marriage_date" class="form-control datepicker" placeholder="DD-MM-YYYY" autofocus>                                
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Blood Group</label>
+                                <select name="blood_group" class="form-control" required autofocus>
+                                    <option value="">Select Blood Group</option>
+                                    {% for value, label in blood_group_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Nationality</label>
+                                <input type="text" name="nationality" class="form-control" value="Indian"
+                                       placeholder="Enter nationality" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Physically Handicapped</label>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" name="physically_handicapped" class="form-check-input"
+                                           id="physically_handicapped" autofocus>
+                                    <label class="form-check-label" for="physically_handicapped">
+                                        Yes, physically handicapped
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information Section -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2 mb-3 text-primary">
+                                    <i class="fas fa-phone me-2"></i>Contact Information
+                                </h6>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label required">Dial Code</label>
+                                <select name="dial_code" class="form-control" required autofocus>
+                                    <option value="+91">+91 (India)</option>
+                                    <option value="+1">+1 (USA/Canada)</option>
+                                    <option value="+44">+44 (UK)</option>
+                                    <option value="+61">+61 (Australia)</option>
+                                    <option value="+65">+65 (Singapore)</option>
+                                    <option value="+971">+971 (UAE)</option>
+                                    <option value="+86">+86 (China)</option>
+                                    <option value="+81">+81 (Japan)</option>
+                                    <option value="+49">+49 (Germany)</option>
+                                    <option value="+33">+33 (France)</option>
+                                    <!-- Add more country codes as needed -->
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label required">Phone Number</label>
+                                <input type="tel" name="phone" class="form-control" required
+                                       placeholder="Enter phone number" autofocus>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Alternate Phone</label>
+                                <input type="tel" name="alternate_phone" class="form-control"
+                                       placeholder="Enter alternate phone" autofocus>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Residence Number</label>
+                                <input type="tel" name="residence_number" class="form-control"
+                                       placeholder="Enter residence number" autofocus>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label required">Present Address</label>
+                                <textarea name="present_address" class="form-control" rows="3" placeholder="Enter employee present address" autofocus>{{ employee.present_address|default_if_none:'' }}</textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label required">Permanent Address</label>
+                                <textarea name="address" class="form-control" rows="3" placeholder="Enter employee address" autofocus>{{ employee.address|default_if_none:'' }}</textarea>
+                            </div>                            
+                        </div>
+
+                        <!-- Family Information Section -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2 mb-3 text-primary">
+                                    <i class="fas fa-users me-2"></i>Family Information
+                                </h6>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">Father's Name</label>
+                                <input type="text" name="father_name" class="form-control"
+                                       placeholder="Enter father's name"  required autofocus>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">Mother's Name</label>
+                                <input type="text" name="mother_name" class="form-control"
+                                       placeholder="Enter mother's name" required autofocus>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Spouse Name</label>
+                                <input type="text" name="spouse_name" class="form-control"
+                                       placeholder="Enter spouse name">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Spouse Gender</label>
+                                <select name="spouse_gender" class="form-control" autofocus>
+                                    <option value="">Select Gender</option>
+                                    {% for value, label in gender_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Employment Information Section -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2 mb-3 text-primary">
+                                    <i class="fas fa-briefcase me-2"></i>Employment Information
+                                </h6>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">Department</label>
+                                <select name="department" class="form-control" id="departmentSelect" required autofocus>
+                                    <option value="">Select Department</option>
+                                    {% for department in departments %}
+                                    <option value="{{ department.id }}"
+                                            data-department-name="{{ department.name }}">
+                                        {{ department.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">Designation</label>
+                                <select name="designation" class="form-control" id="designationSelect" required autofocus>
+                                    <option value="">Select Designation</option>
+                                    {% for designation in designations %}
+                                    <option value="{{ designation.id }}"
+                                            data-designation-title="{{ designation.title }}"
+                                            data-designation-level="{{ designation.level|default:'' }}"
+                                            data-department-id="{{ designation.department_id }}">
+                                        {{ designation.title }} {% if designation.level %}(Level {{ designation.level }}){% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">Location</label>
+                                <select name="location" class="form-control" required id="locationSelect" autofocus>
+                                    <option value="">Select Location</option>
+                                    {% for location in locations %}
+                                    <option value="{{ location.id }}"
+                                            data-location-name="{{ location.name }}">
+                                        {{ location.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- In your template, replace the single manager search with this -->
+                            <div class="col-md-12 position-relative">
+                                <label class="form-label">Reporting Managers</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                        class="form-control"
+                                        id="reportingManagerSearch"
+                                        placeholder="Search Manager by Name or ID"
+                                        autocomplete="off">
+                                    <button class="btn btn-outline-primary" type="button" id="addManagerBtn">
+                                        <i class="fas fa-plus"></i> Add
+                                    </button>
+                                </div>
+                                <div id="managerSuggestions" class="dropdown-menu w-100" style="display: none;"></div>
+                                <input type="hidden" id="reportingManagerId" name="reporting_manager_id">
+                            </div>
+
+                            <!-- Selected Managers Display -->
+                            <div class="col-12 mt-3" id="selectedManagersSection" style="display: none;">
+                                <div class="card">
+                                    <div class="card-header py-2">
+                                        <h6 class="mb-0"><i class="fas fa-users me-2"></i>Selected Reporting Managers</h6>
+                                    </div>
+                                    <div class="card-body py-2">
+                                        <div id="selectedManagersList" class="d-flex flex-wrap gap-2">
+                                            <!-- Selected managers will appear here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                           <!-- <div class="col-md-6 position-relative">
+                                <label class="form-label">Reporting Manager</label>
+                                <input type="text" class="form-control" id="reportingManagerSearch" name="reporting_manager" placeholder="Search Manager by Name or ID" autofocus>
+                                <div id="managerSuggestions" class="dropdown-menu w-100" style="display: none;"></div>
+                                <input type="hidden" name="reporting_manager_id" id="reportingManagerId">
+                            </div> -->
+
+                            <!-- Selected Manager Info -->
+                            <!-- <div class="row mt-3" id="selectedManagerSection" style="display: none;">
+                                <div class="col-12">
+                                    <div class="alert alert-info py-2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>Selected Manager:</strong>
+                                                <span id="selectedManagerName" class="ms-2"></span>
+                                                <span id="selectedManagerId" class="text-muted ms-2"></span>
+                                            </div>
+                                            <button type="button" class="btn-close" id="clearManagerSelection"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Role</label>
+                                <select name="role" class="form-control" required autofocus>
+                                    {% for role in roles %}
+                                    <option value="{{ role.name }}"
+                                            data-location-name="{{ role.name }}">
+                                        {{ role.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Worker Type</label>
+                                <select name="worker_type" class="form-control" required autofocus>
+                                    <option value="">Select Worker Type</option>
+                                    {% for value, label in worker_type_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Status</label>
+                                <select name="status" class="form-control" required autofocus>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Date of Joining</label>
+                                <input type="text" name="date_of_joining" class="form-control datepicker" placeholder="DD-MM-YYYY" autofocus>
+                            </div>
+                            <!-- Add this in the Employment Information section -->
+                            <div class="col-md-4">
+                               <label class="form-label">Probation Period (Days)</label>
+                               <input type="number" name="probation_period_days" class="form-control" value="90" min="30" max="365" placeholder="Enter probation days" autofocus />
+                               <div class="form-text">Individual probation period for this employee</div>
+                            </div>
+                            <!-- Notice Period Field -->
+                            <div class="col-md-4">
+                                <label class="form-label">Notice Period (Days)</label>
+                                <input type="number" name="notice_period_days" class="form-control"
+                                    value="{{ employee.notice_period_days|default:'60' }}"
+                                    min="15" max="180" autofocus>
+                                <div class="form-text">Default notice period in days (15-180)</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Contract End Date</label>
+                                <input type="text" name="contract_end_date" class="form-control datepicker" placeholder="DD-MM-YYYY" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Legal Entity</label>
+                                <input type="text" name="legal_entity" class="form-control"
+                                       placeholder="Enter legal entity" value="iKonTel" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Profile Picture</label>
+                                <input type="file" name="profile_picture" class="form-control" accept="image/*" required autofocus
+                                    onchange="validateProfilePicture(this)">
+                                <div class="form-text">Max file size: 200KB. Allowed formats: JPG, JPEG, PNG</div>
+                                <div class="profile-preview mt-2" id="profilePreview" style="display: none;">
+                                    <img id="previewImage" src="#" alt="Preview" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                                </div>
+                                <div class="invalid-feedback" id="profilePictureError"></div>
+                            </div>
+                        </div>
+
+                        <!-- Bank & Salary Information Section -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2 mb-3 text-primary">
+                                    <i class="fas fa-university me-2"></i>Bank & Salary Information
+                                </h6>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Bank Name</label>
+                                <input type="text" name="bank_name" class="form-control"
+                                       placeholder="Enter bank name" required autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Account Number</label>
+                                <input type="text" name="account_number" class="form-control"
+                                       placeholder="Enter account number" required autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">IFSC Code</label>
+                                <input type="text" name="ifsc_code" class="form-control"
+                                       placeholder="Enter IFSC code"required autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Name on Bank Account</label>
+                                <input type="text" name="name_on_bank_account" class="form-control"
+                                       placeholder="Enter name as in bank account"required autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Salary Payment Mode</label>
+                                <select name="salary_payment_mode" class="form-control"required autofocus>
+                                    <option value="">Select Payment Mode</option>
+                                    {% for value, label in salary_payment_mode_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label required">Basic Salary</label>
+                                <input type="number" name="basic_salary" class="form-control"
+                                       placeholder="Enter basic salary" step="0.01"required autofocus>
+                            </div>
+                        </div>
+
+<!-- PF (Provident Fund) Details Section -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <h6 class="border-bottom pb-2 mb-3 text-primary">
+            <i class="fas fa-file-invoice-dollar me-2"></i>PF (Provident Fund) Details
+        </h6>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label required">PF Details Available</label>
+        <select name="pf_details_available" class="form-control" id="pfDetailsAvailable" autofocus>
+            <option value="">Select</option>
+            {% for value, label in pf_details_choices %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<!-- PF Fields (Hidden by default) - Separate row -->
+<div class="pf-fields" style="display: none;">
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label class="form-label required">PF Establishment ID</label>
+            <input type="text" name="pf_establishment_id" class="form-control"
+                   placeholder="Enter PF establishment ID" autofocus>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label required">PF Joining Date</label>
+            <input type="text" name="pf_joining_date" class="form-control datepicker"
+                   placeholder="DD-MM-YYYY" autofocus>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label required">Name on PF Account</label>
+            <input type="text" name="name_on_pf_account" class="form-control"
+                   placeholder="Enter name as in PF account" autofocus>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label required">UAN</label>
+            <input type="text" name="uan" class="form-control"
+                   placeholder="Enter Universal Account Number" autofocus>
+        </div>
+    </div>
+</div>
+
+                        <!-- ESI & Professional Tax Details Section -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <h6 class="border-bottom pb-2 mb-3 text-primary">
+            <i class="fas fa-file-medical me-2"></i>ESI & Professional Tax Details
+        </h6>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label required">ESI Eligible</label>
+        <select name="esi_eligible" class="form-control" id="esiEligible" autofocus>
+            <option value="">Select</option>
+            {% for value, label in esi_eligible_choices %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<!-- ESI Fields (Hidden by default) - Separate row -->
+<div class="esi-fields" style="display: none;">
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label class="form-label required">ESI Details Available</label>
+            <select name="esi_details_available" class="form-control" autofocus>
+                <option value="">Select</option>
+                {% for value, label in esi_eligible_choices %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label required">Employer ESI Number</label>
+            <input type="text" name="employer_esi_number" class="form-control"
+                   placeholder="Enter employer ESI number" autofocus>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label required">ESI Number</label>
+            <input type="text" name="esi_number" class="form-control"
+                   placeholder="Enter ESI number" autofocus>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label required">PT Establishment ID</label>
+            <input type="text" name="pt_establishment_id" class="form-control"
+                   placeholder="Enter PT establishment ID" autofocus>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label required">LWF Eligible</label>
+            <select name="lwf_eligible" class="form-control" autofocus>
+                <option value="">Select</option>
+                {% for value, label in lwf_eligible_choices %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label required">Enrollment Number</label>
+            <input type="text" name="enrollment_number" class="form-control"
+                   placeholder="Enter enrollment number" autofocus>
+        </div>
+    </div>
+</div>
+
+                        <!-- Insurance Details Section -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2 mb-3 text-primary">
+                                    <i class="fas fa-shield-alt me-2"></i>Insurance Details
+                                </h6>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Insurance Type</label>
+                                <select name="insurance_type" class="form-control" autofocus>
+                                    <option value="">Select Insurance Type</option>
+                                    {% for value, label in insurance_type_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Policy Name</label>
+                                <input type="text" name="policy_name" class="form-control"
+                                    placeholder="Enter policy name" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Insurance Company</label>
+                                <input type="text" name="insurance_company" class="form-control"
+                                    placeholder="Enter insurance company" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Policy Number</label>
+                                <input type="text" name="policy_number" class="form-control"
+                                    placeholder="Enter policy number" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Coverage Amount</label>
+                                <input type="number" name="coverage_amount" class="form-control"
+                                    placeholder="Enter coverage amount" step="0.01" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Nominee Name</label>
+                                <input type="text" name="nominee_name" class="form-control"
+                                    placeholder="Enter nominee name" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Relationship with Nominee</label>
+                                <input type="text" name="nominee_relationship" class="form-control"
+                                    placeholder="e.g., Spouse, Father, Mother, etc." autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Policy Start Date</label>
+                                <input type="text" name="policy_start_date" class="form-control datepicker" placeholder="DD-MM-YYYY" autofocus>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Policy End Date</label>
+                                <input type="text" name="policy_end_date" class="form-control datepicker" placeholder="DD-MM-YYYY" autofocus>
+                            </div>
+                        </div>
+
+                        <!-- Document Upload Section (Keep your existing document section) -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2 mb-3 text-primary">
+                                    <i class="fas fa-file-upload me-2"></i>Document Upload
+                                </h6>
+                            </div>
+                        </div>
+
+                        <!-- Your existing document upload sections here -->
+                        <!-- Educational Certificates -->
+                        <div class="col-12">
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-graduation-cap me-2"></i>Educational Certificates
+                                       
+                                    </h6>
+                                    <button type="button" class="btn btn-sm btn-primary float-end" id="addEducation">
+                                            <i class="fas fa-plus"></i> Add More
+                                        </button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="educationFields">
+                                        <div class="row g-3 education-row">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Certificate Type</label>
+                                                <select name="education_type[]" class="form-control" autofocus>
+                                                    <option value="">Select Certificate Type</option>
+                                                    <option value="10th">10th Certificate</option>
+                                                    <option value="12th">12th Certificate</option>
+                                                    <option value="bachelor">Bachelor's Degree</option>
+                                                    <option value="master">Master's Degree</option>
+                                                    <option value="diploma">Diploma</option>
+                                                    <option value="phd">PhD</option>
+                                                    <option value="other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Upload Certificate</label>
+                                                <input type="file" name="education_files[]" class="form-control" accept=".pdf" autofocus>
+                                                <div class="form-text">PDF files only</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAN Card -->
+                        <div class="col-12">
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0"><i class="fas fa-id-card me-2"></i>PAN Card</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label required">PAN Number</label>
+                                            <input type="text" name="pan_number" class="form-control" placeholder="Enter PAN Number" maxlength="10" required autofocus>
+                                            <div class="form-text">10-character PAN number (e.g., ABCDE1234F)</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Upload PAN Card</label>
+                                            <input type="file" name="pan_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" autofocus>
+                                            <div class="form-text">Upload front side of PAN card(PDF)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Aadhaar Card -->
+                        <div class="col-12">
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0"><i class="fas fa-address-card me-2"></i>Aadhaar Card</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Aadhaar Number</label>
+                                            <input type="text" name="aadhaar_number" class="form-control" placeholder="Enter Aadhaar Number" maxlength="12" required autofocus>
+                                            <div class="form-text">12-digit Aadhaar number</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label required">Upload Aadhaar Card</label>
+                                            <input type="file" name="aadhaar_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" autofocus>
+                                            <div class="form-text">Upload front and back sides in single PDF</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Other Documents (Keep your existing other documents section) -->
+                        <div class="col-12">
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0"><i class="fas fa-file-alt me-2"></i>Other Employment Documents</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <!-- Offer Letter -->
+                                        <div class="col-md-6">
+                                            <label class="form-label">Offer Letter</label>
+                                            <input type="file" name="offer_letter_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" autofocus>
+                                            <div class="form-text">Upload signed offer letter(PDF)</div>
+                                        </div>
+                                       
+                                        <!-- Salary Slips -->
+                                        <div class="col-md-6">
+                                            <label class="form-label">Last 3 Months Salary Slips</label>
+                                            <input type="file" name="salary_slip_files" class="form-control" accept=".pdf,.jpg,.jpeg,.png" multiple autofocus>
+                                            <div class="form-text">You can select multiple files(PDF)</div>
+                                        </div>
+                                       
+                                        <!-- Bank Statement -->
+                                        <div class="col-md-6">
+                                            <label class="form-label">Bank Statement (Last 3 Months)</label>
+                                            <input type="file" name="bank_statement_file" class="form-control" accept=".pdf" autofocus>
+                                            <div class="form-text">Upload bank statement PDF</div>
+                                        </div>
+                                       
+                                        <!-- Form 16 Document - Simple Upload -->
+                                         <div class="col-md-6">
+                                            <label class="form-label">Upload Form 16</label>
+                                            <input type="file" name="form16_file" class="form-control"
+                                                accept=".pdf,.jpg,.jpeg,.png" autofocus>
+                                            <div class="form-text">Upload Form 16 from previous employment (PDF only)</div>
+                                        </div>
+                                        <!-- ITR (Investment Declaration) Document - Simple Upload -->
+                                        <div class="col-md-6">
+                                            <label class="form-label">Upload ITR Document</label>
+                                            <input type="file" name="iir_file" class="form-control"
+                                                accept=".pdf,.jpg,.jpeg,.png" autofocus>
+                                            <div class="form-text">Upload investment declaration documents (PDF only)</div>
+                                        </div>
+
+                                        <!-- Experience/Relieving Letters -->
+<div class="col-12">
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h6 class="mb-0">
+                <i class="fas fa-file-contract me-2"></i>Experience/Relieving Letters                
+            </h6>
+            <button type="button" class="btn btn-sm btn-primary float-end" id="addExperienceLetter">
+                    <i class="fas fa-plus"></i> Add More
+                </button>
+        </div>
+        <div class="card-body">
+            <div id="experienceLetterFields">
+                <div class="row g-3 experience-letter-row">
+                    <div class="col-md-5">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" name="experience_company[]" class="form-control"
+                               placeholder="Enter company name" autofocus>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label">Upload Experience/Relieving Letter</label>
+                        <input type="file" name="experience_letter_files[]" class="form-control"
+                               accept=".pdf,.jpg,.jpeg,.png" autofocus>
+                        <div class="form-text">Upload Experience/Relieving PDF only</div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="button" class="btn btn-danger btn-sm remove-experience-letter w-100">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <a href="{% url 'employee_page' %}" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </a>
+                                     <!-- Add Probation Settings Button Here -->
+                                        {% if request.session.user_role == 'ADMIN' or request.session.user_role == 'HR' or request.session.user_role == 'SUPER ADMIN' %}
+                                        <a href="{% url 'probation_settings' %}" class="btn btn-outline-primary"><i class="fas fa-user-clock"></i> Probation Settings</a>
+                                        {% endif %}
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Save Employee
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // MULTIPLE REPORTING MANAGERS FUNCTIONALITY
+document.addEventListener('DOMContentLoaded', function() {
+    const managerSearchInput = document.getElementById('reportingManagerSearch');
+    const managerSuggestions = document.getElementById('managerSuggestions');
+    const addManagerBtn = document.getElementById('addManagerBtn');
+    const selectedManagersSection = document.getElementById('selectedManagersSection');
+    const selectedManagersList = document.getElementById('selectedManagersList');
+   
+    let selectedManagers = new Map(); // Using Map to avoid duplicates
+   
+    function searchManagers(searchTerm) {
+        fetch('/search-managers/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: `search_term=${encodeURIComponent(searchTerm)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.managers && data.managers.length > 0) {
+                showManagerSuggestions(data.managers);
+            } else {
+                managerSuggestions.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error searching managers:', error);
+            managerSuggestions.style.display = 'none';
+        });
+    }
+   
+    function showManagerSuggestions(managers) {
+        managerSuggestions.innerHTML = '';
+       
+        // Filter out already selected managers
+        const filteredManagers = managers.filter(mgr => !selectedManagers.has(mgr.employee_id));
+       
+        if (filteredManagers.length === 0) {
+            const noResult = document.createElement('a');
+            noResult.className = 'dropdown-item text-muted';
+            noResult.href = '#';
+            noResult.textContent = 'No new managers found';
+            noResult.addEventListener('click', function(e) {
+                e.preventDefault();
+            });
+            managerSuggestions.appendChild(noResult);
+        } else {
+            filteredManagers.forEach(mgr => {
+                const suggestionItem = document.createElement('a');
+                suggestionItem.className = 'dropdown-item';
+                suggestionItem.href = '#';
+                suggestionItem.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${mgr.name}</strong>
+                            <div class="small text-muted">${mgr.designation || ''} • ${mgr.department || ''}</div>
+                        </div>
+                        <div class="text-muted small">${mgr.employee_id}</div>
+                    </div>
+                `;
+                suggestionItem.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    selectManager(mgr);
+                });
+                managerSuggestions.appendChild(suggestionItem);
+            });
+        }
+       
+        managerSuggestions.style.display = 'block';
+    }
+   
+    function selectManager(mgr) {
+        // Add to selected managers Map
+        selectedManagers.set(mgr.employee_id, {
+            id: mgr.employee_id,
+            name: mgr.name,
+            designation: mgr.designation || '',
+            department: mgr.department || ''
+        });
+       
+        // Update the display
+        updateSelectedManagersDisplay();
+       
+        // Clear search input
+        managerSearchInput.value = '';
+        managerSuggestions.style.display = 'none';
+    }
+   
+    function updateSelectedManagersDisplay() {
+        selectedManagersList.innerHTML = '';
+       
+        // Create hidden inputs for each selected manager
+        selectedManagersList.innerHTML = '';
+       
+        // Add hidden inputs for form submission
+        selectedManagers.forEach((manager, employeeId) => {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'reporting_manager_ids[]';
+            hiddenInput.value = employeeId;
+            hiddenInput.id = `manager_${employeeId}`;
+            document.getElementById('addEmployeeForm').appendChild(hiddenInput);
+        });
+       
+        // Create visual badges for each manager
+        selectedManagers.forEach((manager, employeeId) => {
+            const managerBadge = document.createElement('div');
+            managerBadge.className = 'manager-badge d-flex align-items-center gap-2 p-2 border rounded';
+            managerBadge.innerHTML = `
+                <div>
+                    <strong class="d-block">${manager.name}</strong>
+                    <small class="text-muted">${manager.designation} • ID: ${employeeId}</small>
+                </div>
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger remove-manager"
+                        data-manager-id="${employeeId}">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            selectedManagersList.appendChild(managerBadge);
+        });
+       
+        // Show/hide the section
+        if (selectedManagers.size > 0) {
+            selectedManagersSection.style.display = 'block';
+        } else {
+            selectedManagersSection.style.display = 'none';
+        }
+    }
+   
+    function removeManager(employeeId) {
+        // Remove from Map
+        selectedManagers.delete(employeeId);
+       
+        // Remove hidden input
+        const hiddenInput = document.getElementById(`manager_${employeeId}`);
+        if (hiddenInput) {
+            hiddenInput.remove();
+        }
+       
+        // Update display
+        updateSelectedManagersDisplay();
+    }
+   
+    // Event Listeners
+    let searchTimeout = null;
+    managerSearchInput.addEventListener('input', function() {
+        const term = this.value.trim();
+        if (searchTimeout) clearTimeout(searchTimeout);
+        if (term.length < 2) {
+            managerSuggestions.style.display = 'none';
+            return;
+        }
+        searchTimeout = setTimeout(() => searchManagers(term), 300);
+    });
+   
+    addManagerBtn.addEventListener('click', function() {
+        const term = managerSearchInput.value.trim();
+        if (term.length >= 2) {
+            searchManagers(term);
+        }
+    });
+   
+    // Remove manager when clicking remove button
+    selectedManagersList.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-manager')) {
+            const button = e.target.closest('.remove-manager');
+            const managerId = button.getAttribute('data-manager-id');
+            removeManager(managerId);
+        }
+    });
+   
+    // Close suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!managerSearchInput.contains(e.target) &&
+            !managerSuggestions.contains(e.target) &&
+            !addManagerBtn.contains(e.target)) {
+            managerSuggestions.style.display = 'none';
+        }
+    });
+   
+    // Keep backward compatibility - set first manager as primary in hidden field
+    const reportingManagerId = document.getElementById('reportingManagerId');
+    if (reportingManagerId) {
+        // When form is submitted, set the first manager as primary
+        document.getElementById('addEmployeeForm').addEventListener('submit', function() {
+            if (selectedManagers.size > 0) {
+                const firstManagerId = Array.from(selectedManagers.keys())[0];
+                reportingManagerId.value = firstManagerId;
+            }
+        });
+    }
+});
+    // Your existing JavaScript code for education fields, validation, etc.
+    // Add more education fields
+    document.getElementById('addEducation').addEventListener('click', function() {
+        const educationFields = document.getElementById('educationFields');
+        const newRow = document.createElement('div');
+        newRow.className = 'row g-3 education-row mt-3';
+        newRow.innerHTML = `
+            <div class="col-md-5">
+                <select name="education_type[]" class="form-control" autofocus>
+                    <option value="">Select Certificate Type</option>
+                    <option value="10th">10th Certificate</option>
+                    <option value="12th">12th Certificate</option>
+                    <option value="bachelor">Bachelor's Degree</option>
+                    <option value="master">Master's Degree</option>
+                    <option value="diploma">Diploma</option>
+                    <option value="phd">PhD</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="col-md-5">
+                <input type="file" name="education_files[]" class="form-control" accept=".pdf" autofocus>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-danger btn-sm remove-education">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        educationFields.appendChild(newRow);
+    });
+
+    // Remove education fields
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-education')) {
+            e.target.closest('.education-row').remove();
+        }
+    });
+
+    // PAN number validation
+    const panField = document.querySelector('[name="pan_number"]');
+    if (panField) {
+        panField.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+
+        panField.addEventListener('blur', function() {
+            if (this.value && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(this.value)) {
+                this.classList.add('is-invalid');
+                alert('Please enter a valid PAN number (e.g., ABCDE1234F)');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+    }
+
+    // Aadhaar number validation
+    const aadhaarField = document.querySelector('[name="aadhaar_number"]');
+    if (aadhaarField) {
+        aadhaarField.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        aadhaarField.addEventListener('blur', function() {
+            if (this.value && !/^\d{12}$/.test(this.value)) {
+                this.classList.add('is-invalid');
+                alert('Please enter a valid 12-digit Aadhaar number');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+    }
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    // Reporting manager selection
+    /* const managerSearchInput = document.getElementById('reportingManagerSearch');
+const managerSuggestions = document.getElementById('managerSuggestions');
+const selectedManagerSection = document.getElementById('selectedManagerSection');
+const selectedManagerName = document.getElementById('selectedManagerName');
+const selectedManagerId = document.getElementById('selectedManagerId');
+const reportingManagerId = document.getElementById('reportingManagerId');
+const clearManagerSelection = document.getElementById('clearManagerSelection');
+
+let searchTimeout = null;
+managerSearchInput.addEventListener('input', function() {
+    const term = this.value.trim();
+    if (searchTimeout) clearTimeout(searchTimeout);
+    if (term.length < 2) {
+        managerSuggestions.style.display = 'none';
+        return;
+    }
+    searchTimeout = setTimeout(() => searchManagers(term), 300);
+});
+
+function searchManagers(searchTerm) {
+    fetch('/search-managers/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: `search_term=${encodeURIComponent(searchTerm)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.managers && data.managers.length > 0) {
+            showManagerSuggestions(data.managers);
+        } else {
+            managerSuggestions.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error searching managers:', error);
+        managerSuggestions.style.display = 'none';
+    });
+}
+
+function showManagerSuggestions(managers) {
+    managerSuggestions.innerHTML = '';
+    managers.forEach(mgr => {
+        const suggestionItem = document.createElement('a');
+        suggestionItem.className = 'dropdown-item';
+        suggestionItem.href = '#';
+        suggestionItem.innerHTML = `
+            <strong>${mgr.name}</strong>
+           
+        `;
+        suggestionItem.addEventListener('click', function (e) {
+            e.preventDefault();
+            selectManager(mgr);
+        });
+        managerSuggestions.appendChild(suggestionItem);
+    });
+    managerSuggestions.style.display = 'block';
+}
+
+function selectManager(mgr) {
+    managerSearchInput.value = `${mgr.name}`;
+    reportingManagerId.value = mgr.employee_id;
+    selectedManagerName.textContent = mgr.name;
+    selectedManagerId.textContent = `(${mgr.employee_id})`;
+    selectedManagerSection.style.display = 'block';
+    managerSuggestions.style.display = 'none';
+}
+
+clearManagerSelection.addEventListener('click', () => {
+    reportingManagerId.value = '';
+    managerSearchInput.value = '';
+    selectedManagerSection.style.display = 'none';
+}); */
+
+    // Form validation for required fields
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('addEmployeeForm');
+       
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                const requiredFields = form.querySelectorAll('[required]');
+               
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('is-invalid');
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please fill all required fields marked with *');
+                }
+            });
+
+            // Real-time validation for required fields
+            const requiredFields = form.querySelectorAll('[required]');
+            requiredFields.forEach(field => {
+                field.addEventListener('blur', function() {
+                    if (!this.value.trim()) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        }
+    });
+
+    // Profile Picture Validation
+function validateProfilePicture(input) {
+    const file = input.files[0];
+    const errorElement = document.getElementById('profilePictureError');
+    const previewContainer = document.getElementById('profilePreview');
+    const previewImage = document.getElementById('previewImage');
+   
+    // Reset previous states
+    input.classList.remove('is-invalid', 'is-valid');
+    errorElement.textContent = '';
+    previewContainer.style.display = 'none';
+   
+    if (!file) {
+        return true; // No file selected
+    }
+   
+    // Check file size (200KB = 200 * 1024 bytes)
+    const maxSize = 200 * 1024; // 200KB in bytes
+    if (file.size > maxSize) {
+        input.classList.add('is-invalid');
+        errorElement.textContent = `File size must be less than 200KB. Current size: ${(file.size / 1024).toFixed(2)}KB`;
+        input.value = ''; // Clear the file input
+        return false;
+    }
+   
+    // Check file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowedTypes.includes(file.type)) {
+        input.classList.add('is-invalid');
+        errorElement.textContent = 'Only JPG, JPEG, and PNG files are allowed.';
+        input.value = ''; // Clear the file input
+        return false;
+    }
+   
+    // Show preview if valid
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        previewContainer.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+   
+    input.classList.add('is-valid');
+    return true;
+}
+    // Function to get a specific cookie (used for CSRF token)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Check if this cookie name matches
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+// PF Details Available toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const pfDetailsAvailable = document.getElementById('pfDetailsAvailable');
+    const pfFieldsContainer = document.querySelector('.pf-fields');
+    const pfFields = [
+        'pf_establishment_id',
+        'pf_joining_date',
+        'name_on_pf_account',
+        'uan'
+    ];
+
+    function togglePfFields() {
+        const isPfRequired = pfDetailsAvailable.value === 'Yes';
+       
+        if (isPfRequired) {
+            // Show PF fields with animation
+            pfFieldsContainer.style.display = 'block';
+            // Small delay to trigger animation
+            setTimeout(() => {
+                pfFieldsContainer.style.opacity = '1';
+                pfFieldsContainer.style.transform = 'translateY(0)';
+            }, 10);
+           
+            // Make fields required
+            pfFields.forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    field.required = true;
+                    // Add required class to label
+                    const label = field.closest('.col-md-4').querySelector('label');
+                    if (label && !label.classList.contains('required')) {
+                        label.classList.add('required');
+                    }
+                }
+            });
+        } else {
+            // Hide PF fields with animation
+            pfFieldsContainer.style.opacity = '0';
+            pfFieldsContainer.style.transform = 'translateY(-10px)';
+           
+            // Remove requirement and clear validation
+            pfFields.forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    field.required = false;
+                    field.classList.remove('is-invalid');
+                    // Remove required class from label
+                    const label = field.closest('.col-md-4').querySelector('label');
+                    if (label) {
+                        label.classList.remove('required');
+                    }
+                   
+                    // Clear field values when PF is not available
+                    field.value = '';
+                }
+            });
+           
+            // Hide after animation
+            setTimeout(() => {
+                pfFieldsContainer.style.display = 'none';
+            }, 300);
+        }
+    }
+
+    // Initial setup
+    togglePfFields();
+    pfDetailsAvailable.addEventListener('change', togglePfFields);
+
+    // Form validation
+    const form = document.getElementById('addEmployeeForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const errorMessages = [];
+           
+            // Check PF fields only if they are required
+            if (pfDetailsAvailable.value === 'Yes') {
+                pfFields.forEach(fieldName => {
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    if (field && !field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('is-invalid');
+                        const fieldLabel = field.closest('.col-md-4').querySelector('label').textContent.replace(' *', '');
+                        errorMessages.push(`${fieldLabel} is required`);
+                    }
+                });
+            }
+           
+            if (!isValid) {
+                e.preventDefault();
+                // Scroll to the first error
+                const firstError = document.querySelector('.pf-fields .is-invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                alert('Please fill all required PF fields:\n\n' + errorMessages.join('\n'));
+            }
+        });
+
+        // Real-time validation for PF fields
+        pfFields.forEach(fieldName => {
+            const field = document.querySelector(`[name="${fieldName}"]`);
+            if (field) {
+                field.addEventListener('blur', function() {
+                    if (pfDetailsAvailable.value === 'Yes' && !this.value.trim()) {  // Fixed: 'Yes' instead of 'yes'
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+               
+                // Clear validation when user starts typing
+                field.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            }
+        });
+    }
+});
+
+// ESI Eligible toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const esiEligible = document.getElementById('esiEligible');
+    const esiFieldsContainer = document.querySelector('.esi-fields');
+    const esiFields = [
+        'esi_details_available',
+        'employer_esi_number',
+        'esi_number',
+        'pt_establishment_id',
+        'lwf_eligible',
+        'enrollment_number'
+    ];
+
+    function toggleEsiFields() {
+        const isEsiRequired = esiEligible.value === 'Yes';
+       
+        if (isEsiRequired) {
+            // Show ESI fields with animation
+            esiFieldsContainer.style.display = 'block';
+            // Small delay to trigger animation
+            setTimeout(() => {
+                esiFieldsContainer.style.opacity = '1';
+                esiFieldsContainer.style.transform = 'translateY(0)';
+            }, 10);
+           
+            // Make fields required
+            esiFields.forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    field.required = true;
+                    // Add required class to label
+                    const label = field.closest('.col-md-4').querySelector('label');
+                    if (label && !label.classList.contains('required')) {
+                        label.classList.add('required');
+                    }
+                }
+            });
+        } else {
+            // Hide ESI fields with animation
+            esiFieldsContainer.style.opacity = '0';
+            esiFieldsContainer.style.transform = 'translateY(-10px)';
+           
+            // Remove requirement and clear validation
+            esiFields.forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    field.required = false;
+                    field.classList.remove('is-invalid');
+                    // Remove required class from label
+                    const label = field.closest('.col-md-4').querySelector('label');
+                    if (label) {
+                        label.classList.remove('required');
+                    }
+                   
+                    // Auto-set specific fields to "No" when ESI is not eligible
+                    if (fieldName === 'esi_details_available' || fieldName === 'lwf_eligible') {
+                        field.value = 'No';
+                    }
+                   
+                    // Clear other field values
+                    if (fieldName === 'employer_esi_number' || fieldName === 'esi_number' ||
+                        fieldName === 'pt_establishment_id' || fieldName === 'enrollment_number') {
+                        field.value = '';
+                    }
+                }
+            });
+           
+            // Hide after animation
+            setTimeout(() => {
+                esiFieldsContainer.style.display = 'none';
+            }, 300);
+        }
+    }
+
+    // Initial setup
+    toggleEsiFields();
+    esiEligible.addEventListener('change', toggleEsiFields);
+
+    // Form validation
+    const form = document.getElementById('addEmployeeForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const errorMessages = [];
+           
+            // Check ESI fields only if they are required
+            if (esiEligible.value === 'Yes') {
+                esiFields.forEach(fieldName => {
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    if (field && !field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('is-invalid');
+                        const fieldLabel = field.closest('.col-md-4').querySelector('label').textContent.replace(' *', '');
+                        errorMessages.push(`${fieldLabel} is required`);
+                    }
+                });
+            }
+           
+            if (!isValid) {
+                e.preventDefault();
+                // Scroll to the first error
+                const firstError = document.querySelector('.esi-fields .is-invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                alert('Please fill all required ESI fields:\n\n' + errorMessages.join('\n'));
+            }
+        });
+
+        // Real-time validation for ESI fields
+        esiFields.forEach(fieldName => {
+            const field = document.querySelector(`[name="${fieldName}"]`);
+            if (field) {
+                field.addEventListener('blur', function() {
+                    if (esiEligible.value === 'Yes' && !this.value.trim()) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+               
+                // Clear validation when user starts typing
+                field.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            }
+        });
+    }
+});
+
+// Employee ID uppercase conversion
+document.addEventListener('DOMContentLoaded', function() {
+    const employeeIdField = document.querySelector('input[name="employee_id"]');
+   
+    if (employeeIdField) {
+        // Convert to uppercase as user types, allow letters, numbers and slashes
+        employeeIdField.addEventListener('input', function() {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9\/]/g, '');
+        });
+       
+        // Convert on blur (for paste operations)
+        employeeIdField.addEventListener('blur', function() {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9\/]/g, '');
+        });
+       
+        // Convert on paste
+        employeeIdField.addEventListener('paste', function(e) {
+            setTimeout(() => {
+                this.value = this.value.toUpperCase().replace(/[^A-Z0-9\/]/g, '');
+            }, 0);
+        });
+    }
+});
+
+// Add more experience letter fields
+document.getElementById('addExperienceLetter').addEventListener('click', function() {
+    const experienceLetterFields = document.getElementById('experienceLetterFields');
+    const newRow = document.createElement('div');
+    newRow.className = 'row g-3 experience-letter-row mt-3';
+    newRow.innerHTML = `
+        <div class="col-md-5">
+            <input type="text" name="experience_company[]" class="form-control"
+                   placeholder="Enter company name" autofocus>
+        </div>
+        <div class="col-md-5">
+            <input type="file" name="experience_letter_files[]" class="form-control"
+                   accept=".pdf,.jpg,.jpeg,.png" autofocus>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-danger btn-sm remove-experience-letter w-100">
+                <i class="fas fa-times"></i> Remove
+            </button>
+        </div>
+    `;
+    experienceLetterFields.appendChild(newRow);
+});
+
+// Remove experience letter fields
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-experience-letter')) {
+        e.target.closest('.experience-letter-row').remove();
+    }
+});
+
+$(document).ready(function() {
+    // Department change event
+    $('#departmentSelect').change(function() {
+        var departmentId = $(this).val();
+        var designationSelect = $('#designationSelect');
+       
+        // Clear current options except the first one
+        designationSelect.find('option:not(:first)').remove();
+       
+        if (departmentId) {
+            // Show loading state
+            designationSelect.prop('disabled', true);
+            designationSelect.html('<option value="">Loading designations...</option>');
+           
+            // Fetch designations for selected department
+            $.ajax({
+                url: '/get-designations-by-department/',  // Update this URL to match your URL pattern
+                type: 'GET',
+                data: {
+                    'department_id': departmentId
+                },
+                success: function(response) {
+                    designationSelect.prop('disabled', false);
+                    designationSelect.html('<option value="">Select Designation</option>');
+                   
+                    if (response.designations && response.designations.length > 0) {
+                        $.each(response.designations, function(index, designation) {
+                            designationSelect.append(
+                                $('<option>', {
+                                    value: designation.id,
+                                    text: designation.display_text,
+                                    'data-designation-title': designation.title,
+                                    'data-designation-level': designation.level,
+                                    'data-department-id': departmentId
+                                })
+                            );
+                        });
+                    } else {
+                        designationSelect.append(
+                            $('<option>', {
+                                value: '',
+                                text: 'No designations found for this department',
+                                disabled: true
+                            })
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    designationSelect.prop('disabled', false);
+                    designationSelect.html('<option value="">Error loading designations</option>');
+                    console.error('Error fetching designations:', error);
+                }
+            });
+        } else {
+            // If no department selected, show all designations
+            loadAllDesignations();
+        }
+    });
+   
+    // Function to load all designations
+    function loadAllDesignations() {
+        var designationSelect = $('#designationSelect');
+        designationSelect.prop('disabled', true);
+        designationSelect.html('<option value="">Loading all designations...</option>');
+       
+        $.ajax({
+            url: '/get-designations-by-department/',  // Same URL but without department_id
+            type: 'GET',
+            success: function(response) {
+                designationSelect.prop('disabled', false);
+                designationSelect.html('<option value="">Select Designation</option>');
+               
+                if (response.designations && response.designations.length > 0) {
+                    $.each(response.designations, function(index, designation) {
+                        designationSelect.append(
+                            $('<option>', {
+                                value: designation.id,
+                                text: designation.display_text,
+                                'data-designation-title': designation.title,
+                                'data-designation-level': designation.level
+                            })
+                        );
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                designationSelect.prop('disabled', false);
+                designationSelect.html('<option value="">Error loading designations</option>');
+                console.error('Error fetching designations:', error);
+            }
+        });
+    }
+   
+    // Optional: Preselect designation if editing and department is already selected
+    function preselectDesignation() {
+        var departmentId = $('#departmentSelect').val();
+        var designationId = $('#designationSelect').val();
+       
+        if (departmentId && designationId) {
+            // The designation should already be in the correct filtered list
+        }
+    }
+   
+    // Call this on page load if you're in edit mode
+    preselectDesignation();
+});
+
+
+const nameFields = [
+    "first_name",
+    "middle_name",
+    "last_name",
+    "father_name",
+    "mother_name",
+    "spouse_name",
+    "nationality",
+    "bank_name",
+    "name_on_bank_account",
+    "nominee_name",
+    "nominee_relationship",
+    "policy_name",
+    "insurance_company",
+    "experience_company[]"
+];
+
+// Numeric-only fields
+const numericFields = [
+    "phone",
+    "alternate_phone",
+    "residence_number",
+    "aadhaar_number",
+    "account_number",
+    "probation_period_days",
+    "notice_period_days",
+    "coverage_amount"
+];
+
+// PAN validation
+const pan_Field = document.querySelector("input[name='pan_number']");
+const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+// Main function to apply validation
+function applyValidation() {
+
+    // 1. Character-only validation
+    nameFields.forEach(fieldName => {
+        const field = document.querySelector(`input[name='${fieldName}']`);
+        if (field) {
+            field.addEventListener("input", function () {
+                const regex = /^[A-Za-z ]+$/;
+                if (!regex.test(this.value)) {
+                    this.classList.add("is-invalid");
+                } else {
+                    this.classList.remove("is-invalid");
+                }
+            });
+        }
+    });
+
+    // 2. Numeric-only validation
+    numericFields.forEach(fieldName => {
+        const field = document.querySelector(`input[name='${fieldName}']`);
+        if (field) {
+            field.addEventListener("input", function () {
+                const regex = /^[0-9]+$/;
+                if (!regex.test(this.value)) {
+                    this.classList.add("is-invalid");
+                } else {
+                    this.classList.remove("is-invalid");
+                }
+            });
+        }
+    });
+
+    // 3. PAN validation
+    if (pan_Field) {
+        pan_Field.addEventListener("input", function () {
+            if (!panRegex.test(this.value.toUpperCase())) {
+                this.classList.add("is-invalid");
+            } else {
+                this.classList.remove("is-invalid");
+            }
+        });
+    }
+}
+
+// Run validation after page loads
+document.addEventListener("DOMContentLoaded", applyValidation);
+
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validation configuration for each field
+    const fieldValidations = {
+        // Employee ID - Required, alphanumeric
+        'employee_id': {
+    element: document.querySelector('[name="employee_id"]'),
+    validate: function(value) {
+        return value.trim() !== '' && /^[A-Z0-9\/]+$/.test(value.toUpperCase());
+    },
+    errorMessage: 'Please enter a valid Employee ID (letters, numbers and / only)'
+},
+       
+        // First Name - Required, letters only
+        'first_name': {
+            element: document.querySelector('[name="first_name"]'),
+            validate: function(value) {
+                return value.trim() !== '' && /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid first name (letters only)'
+        },
+       
+        // Middle Name - Optional, letters only
+        'middle_name': {
+            element: document.querySelector('[name="middle_name"]'),
+            validate: function(value) {
+                return value.trim() === '' || /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid middle name (letters only)'
+        },
+       
+        // Last Name - Required, letters only
+        'last_name': {
+            element: document.querySelector('[name="last_name"]'),
+            validate: function(value) {
+                return value.trim() !== '' && /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid last name (letters only)'
+        },
+       
+        // Email - Required, valid email format
+        'email': {
+            element: document.querySelector('[name="email"]'),
+            validate: function(value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return value.trim() !== '' && emailRegex.test(value);
+            },
+            errorMessage: 'Please enter a valid email address'
+        },
+       
+        // Gender - Required selection
+        'gender': {
+            element: document.querySelector('[name="gender"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a gender'
+        },
+       
+        // Date of Birth - Required, valid date and at least 18 years old
+        'date_of_birth': {
+            element: document.querySelector('[name="date_of_birth"]'),
+            validate: function(value) {
+                if (!value.trim()) return false;
+               
+                // Validate DD-MM-YYYY format
+                const dateRegex = /^(\d{2})-(\d{2})-(\d{4})$/;
+                if (!dateRegex.test(value)) return false;
+               
+                const parts = value.split('-');
+                const day = parseInt(parts[0], 10);
+                const month = parseInt(parts[1], 10) - 1; // Months are 0-based
+                const year = parseInt(parts[2], 10);
+               
+                const dob = new Date(year, month, day);
+                const today = new Date();
+               
+                // Check if date is valid
+                if (dob.getDate() !== day || dob.getMonth() !== month || dob.getFullYear() !== year) {
+                    return false;
+                }
+               
+                // Check if at least 18 years old
+                const age = today.getFullYear() - dob.getFullYear();
+                const monthDiff = today.getMonth() - dob.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                    return age - 1 >= 18;
+                }
+                return age >= 18;
+            },
+            errorMessage: 'Please enter a valid date of birth (DD-MM-YYYY) and ensure employee is at least 18 years old'
+        },
+       
+        // Marital Status - Required selection
+        'marital_status': {
+            element: document.querySelector('[name="marital_status"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a marital status'
+        },
+       
+        // Blood Group - Required selection
+        'blood_group': {
+            element: document.querySelector('[name="blood_group"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a blood group'
+        },
+       
+        // Nationality - Required
+        'nationality': {
+            element: document.querySelector('[name="nationality"]'),
+            validate: function(value) {
+                return value.trim() !== '';
+            },
+            errorMessage: 'Please enter nationality'
+        },
+       
+        // Phone - Required, numbers only
+        // Phone - Required, numbers only, max 10 digits
+'phone': {
+    element: document.querySelector('[name="phone"]'),
+    validate: function(value) {
+        return value.trim() !== '' && /^\d{10}$/.test(value);
+    },
+    errorMessage: 'Please enter a valid 10-digit phone number'
+},
+
+// Alternate Phone - Optional, numbers only, max 10 digits
+'alternate_phone': {
+    element: document.querySelector('[name="alternate_phone"]'),
+    validate: function(value) {
+        return value.trim() === '' || /^\d{10}$/.test(value);
+    },
+    errorMessage: 'Please enter a valid 10-digit alternate phone number'
+},
+
+// Residence Number - Optional, numbers only, max 10 digits
+'residence_number': {
+    element: document.querySelector('[name="residence_number"]'),
+    validate: function(value) {
+        return value.trim() === '' || /^\d{10}$/.test(value);
+    },
+    errorMessage: 'Please enter a valid 10-digit residence number'
+},
+       
+        // Department - Required selection
+        'department': {
+            element: document.querySelector('[name="department"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a department'
+        },
+       
+        // Designation - Required selection
+        'designation': {
+            element: document.querySelector('[name="designation"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a designation'
+        },
+       
+        // Location - Required selection
+        'location': {
+            element: document.querySelector('[name="location"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a location'
+        },
+       
+        // Role - Required selection
+        'role': {
+            element: document.querySelector('[name="role"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a role'
+        },
+       
+        // Worker Type - Required selection
+        'worker_type': {
+            element: document.querySelector('[name="worker_type"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a worker type'
+        },
+       
+        // Status - Required selection
+        'status': {
+            element: document.querySelector('[name="status"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select a status'
+        },
+       
+        // Profile Picture - Required
+        'profile_picture': {
+            element: document.querySelector('[name="profile_picture"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please upload a profile picture'
+        },
+       
+        // PAN Number - Required, valid PAN format
+        'pan_number': {
+            element: document.querySelector('[name="pan_number"]'),
+            validate: function(value) {
+                return value.trim() !== '' && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value.toUpperCase());
+            },
+            errorMessage: 'Please enter a valid PAN number (e.g., ABCDE1234F)'
+        },
+       
+        // Aadhaar Number - Required, 12 digits
+        'aadhaar_number': {
+            element: document.querySelector('[name="aadhaar_number"]'),
+            validate: function(value) {
+                return value.trim() !== '' && /^\d{12}$/.test(value);
+            },
+            errorMessage: 'Please enter a valid 12-digit Aadhaar number'
+        },
+       
+        // Father's Name - Optional, letters only
+        'father_name': {
+            element: document.querySelector('[name="father_name"]'),
+            validate: function(value) {
+                return value.trim() === '' || /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid father\'s name (letters only)'
+        },
+       
+        // Mother's Name - Optional, letters only
+        'mother_name': {
+            element: document.querySelector('[name="mother_name"]'),
+            validate: function(value) {
+                return value.trim() === '' || /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid mother\'s name (letters only)'
+        },
+       
+        // Spouse Name - Optional, letters only
+        'spouse_name': {
+            element: document.querySelector('[name="spouse_name"]'),
+            validate: function(value) {
+                return value.trim() === '' || /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid spouse name (letters only)'
+        },
+       
+        // Bank Name - Optional
+        'bank_name': {
+            element: document.querySelector('[name="bank_name"]'),
+            validate: function(value) {
+                return value.trim() === '' || /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid bank name (letters only)'
+        },
+       
+
+
+        // Account Number - Optional, numbers only
+        'account_number': {
+            element: document.querySelector('[name="account_number"]'),
+            validate: function(value) {
+                 return value.trim() === '' || /^\d{9,18}$/.test(value);
+            },
+            errorMessage: 'Please enter a valid account number'
+        },
+
+       
+       
+       // IFSC Code - Optional but if entered must be valid
+'ifsc_code': {
+    element: document.querySelector('[name="ifsc_code"]'),
+    validate: function(value) {
+        if (value.trim() === '')
+           return true; // allow empty
+
+        // Validate only alphanumeric & exactly 11 characters
+        return /^[A-Z0-9]{11}$/.test(value);
+    },
+    errorMessage: 'IFSC Code must be 11 characters (Capital letters and numbers only)'
+},
+
+       
+        // Name on Bank Account - Optional, letters only
+        'name_on_bank_account': {
+            element: document.querySelector('[name="name_on_bank_account"]'),
+            validate: function(value) {
+                return value.trim() === '' || /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid name (letters only)'
+        },
+       
+        // Salary Payment Mode - Optional selection
+        'salary_payment_mode': {
+            element: document.querySelector('[name="salary_payment_mode"]'),
+            validate: function(value) {
+                return true; // Optional field
+            },
+            errorMessage: ''
+        },
+       
+        // Basic Salary - Optional, positive number
+        'basic_salary': {
+            element: document.querySelector('[name="basic_salary"]'),
+            validate: function(value) {
+                return value.trim() === '' || (!isNaN(value) && parseFloat(value) >= 0);
+            },
+            errorMessage: 'Please enter a valid salary amount'
+        },
+       
+        // Probation Period - Optional, positive number
+        'probation_period_days': {
+            element: document.querySelector('[name="probation_period_days"]'),
+            validate: function(value) {
+                return value.trim() === '' || (!isNaN(value) && parseInt(value) >= 0);
+            },
+            errorMessage: 'Please enter a valid number of days'
+        },
+       
+        // Notice Period - Optional, positive number
+        'notice_period_days': {
+            element: document.querySelector('[name="notice_period_days"]'),
+            validate: function(value) {
+                return value.trim() === '' || (!isNaN(value) && parseInt(value) >= 0);
+            },
+            errorMessage: 'Please enter a valid number of days'
+        },
+       
+        // Coverage Amount - Optional, positive number
+        'coverage_amount': {
+            element: document.querySelector('[name="coverage_amount"]'),
+            validate: function(value) {
+                return value.trim() === '' || (!isNaN(value) && parseFloat(value) >= 0);
+            },
+            errorMessage: 'Please enter a valid coverage amount'
+        },
+       
+        // Nominee Name - Optional, letters only
+        'nominee_name': {
+            element: document.querySelector('[name="nominee_name"]'),
+            validate: function(value) {
+                return value.trim() === '' || /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid nominee name (letters only)'
+        },
+       
+        // Nominee Relationship - Optional
+        'nominee_relationship': {
+            element: document.querySelector('[name="nominee_relationship"]'),
+            validate: function(value) {
+                return value.trim() === '' || /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid Nominee name (letters only)'
+        }
+    };
+
+    // PF Fields validation (conditional)
+    const pfFields = {
+        'pf_establishment_id': {
+            element: document.querySelector('[name="pf_establishment_id"]'),
+            validate: function(value) {
+                return value.trim() !== '';
+            },
+            errorMessage: 'PF Establishment ID is required'
+        },
+        'pf_joining_date': {
+            element: document.querySelector('[name="pf_joining_date"]'),
+            validate: function(value) {
+                if (!value.trim()) return false;
+                const dateRegex = /^(\d{2})-(\d{2})-(\d{4})$/;
+                return dateRegex.test(value);
+            },
+            errorMessage: 'Please enter a valid PF joining date (DD-MM-YYYY)'
+        },
+        'name_on_pf_account': {
+            element: document.querySelector('[name="name_on_pf_account"]'),
+            validate: function(value) {
+                return value.trim() !== '' && /^[A-Za-z\s]+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid name on PF account (letters only)'
+        },
+        'uan': {
+            element: document.querySelector('[name="uan"]'),
+            validate: function(value) {
+                return value.trim() !== '' && /^\d+$/.test(value);
+            },
+            errorMessage: 'Please enter a valid UAN number'
+        }
+    };
+
+    // ESI Fields validation (conditional)
+    const esiFields = {
+        'esi_details_available': {
+            element: document.querySelector('[name="esi_details_available"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select if ESI details are available'
+        },
+        'employer_esi_number': {
+            element: document.querySelector('[name="employer_esi_number"]'),
+            validate: function(value) {
+                return value.trim() !== '';
+            },
+            errorMessage: 'Employer ESI number is required'
+        },
+        'esi_number': {
+            element: document.querySelector('[name="esi_number"]'),
+            validate: function(value) {
+                return value.trim() !== '';
+            },
+            errorMessage: 'ESI number is required'
+        },
+        'pt_establishment_id': {
+            element: document.querySelector('[name="pt_establishment_id"]'),
+            validate: function(value) {
+                return value.trim() !== '';
+            },
+            errorMessage: 'PT Establishment ID is required'
+        },
+        'lwf_eligible': {
+            element: document.querySelector('[name="lwf_eligible"]'),
+            validate: function(value) {
+                return value !== '';
+            },
+            errorMessage: 'Please select LWF eligibility'
+        },
+        'enrollment_number': {
+            element: document.querySelector('[name="enrollment_number"]'),
+            validate: function(value) {
+                return value.trim() !== '';
+            },
+            errorMessage: 'Enrollment number is required'
+        }
+    };
+
+    // Initialize validation for all fields
+    function initializeValidation() {
+        // Add event listeners to all main fields
+        Object.keys(fieldValidations).forEach(fieldName => {
+            const field = fieldValidations[fieldName];
+            if (field.element) {
+                // Validate on blur (when field loses focus)
+                field.element.addEventListener('blur', function() {
+                    validateField(fieldName);
+                });
+               
+                // Remove error styling when user starts typing again
+                field.element.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid')) {
+                        validateField(fieldName);
+                    }
+                });
+            }
+        });
+
+        // Special handling for date fields
+        const dateFields = document.querySelectorAll('.datepicker');
+        dateFields.forEach(field => {
+            field.addEventListener('blur', function() {
+                const fieldName = this.getAttribute('name');
+                if (fieldValidations[fieldName]) {
+                    validateField(fieldName);
+                }
+            });
+        });
+
+        // Special handling for select fields
+        const selectFields = document.querySelectorAll('select');
+        selectFields.forEach(field => {
+            field.addEventListener('change', function() {
+                const fieldName = this.getAttribute('name');
+                if (fieldValidations[fieldName]) {
+                    validateField(fieldName);
+                }
+            });
+        });
+
+        // Special handling for file inputs
+        const fileFields = document.querySelectorAll('input[type="file"]');
+        fileFields.forEach(field => {
+            field.addEventListener('change', function() {
+                const fieldName = this.getAttribute('name');
+                if (fieldValidations[fieldName]) {
+                    validateField(fieldName);
+                }
+            });
+        });
+    }
+
+    // Function to validate a specific field
+    function validateField(fieldName) {
+        const field = fieldValidations[fieldName];
+        if (!field || !field.element) return true;
+
+        const value = field.element.value;
+        const isValid = field.validate(value);
+       
+        if (!isValid && (value.trim() !== '' || field.element.hasAttribute('required'))) {
+            field.element.classList.add('is-invalid');
+            // Create or update error message
+            let errorElement = field.element.parentNode.querySelector('.field-error-message');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.className = 'field-error-message text-danger small mt-1';
+                field.element.parentNode.appendChild(errorElement);
+            }
+            errorElement.textContent = field.errorMessage;
+            errorElement.style.display = 'block';
+            return false;
+        } else {
+            field.element.classList.remove('is-invalid');
+            // Hide error message
+            const errorElement = field.element.parentNode.querySelector('.field-error-message');
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+            return true;
+        }
+    }
+
+    // Conditional validation for PF fields
+    function initializePfValidation() {
+        const pfDetailsAvailable = document.getElementById('pfDetailsAvailable');
+        if (pfDetailsAvailable) {
+            pfDetailsAvailable.addEventListener('change', function() {
+                if (this.value === 'Yes') {
+                    // Add validation for PF fields
+                    Object.keys(pfFields).forEach(fieldName => {
+                        const field = pfFields[fieldName];
+                        if (field.element) {
+                            field.element.addEventListener('blur', function() {
+                                validatePfField(fieldName);
+                            });
+                            field.element.addEventListener('input', function() {
+                                if (this.classList.contains('is-invalid')) {
+                                    validatePfField(fieldName);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function validatePfField(fieldName) {
+        const pfDetailsAvailable = document.getElementById('pfDetailsAvailable');
+        if (pfDetailsAvailable && pfDetailsAvailable.value === 'Yes') {
+            const field = pfFields[fieldName];
+            if (!field || !field.element) return true;
+
+            const value = field.element.value;
+            const isValid = field.validate(value);
+           
+            if (!isValid) {
+                field.element.classList.add('is-invalid');
+                let errorElement = field.element.parentNode.querySelector('.field-error-message');
+                if (!errorElement) {
+                    errorElement = document.createElement('div');
+                    errorElement.className = 'field-error-message text-danger small mt-1';
+                    field.element.parentNode.appendChild(errorElement);
+                }
+                errorElement.textContent = field.errorMessage;
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                field.element.classList.remove('is-invalid');
+                const errorElement = field.element.parentNode.querySelector('.field-error-message');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+                return true;
+            }
+        }
+        return true;
+    }
+
+    // Conditional validation for ESI fields
+    function initializeEsiValidation() {
+        const esiEligible = document.getElementById('esiEligible');
+        if (esiEligible) {
+            esiEligible.addEventListener('change', function() {
+                if (this.value === 'Yes') {
+                    // Add validation for ESI fields
+                    Object.keys(esiFields).forEach(fieldName => {
+                        const field = esiFields[fieldName];
+                        if (field.element) {
+                            field.element.addEventListener('blur', function() {
+                                validateEsiField(fieldName);
+                            });
+                            field.element.addEventListener('input', function() {
+                                if (this.classList.contains('is-invalid')) {
+                                    validateEsiField(fieldName);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function validateEsiField(fieldName) {
+        const esiEligible = document.getElementById('esiEligible');
+        if (esiEligible && esiEligible.value === 'Yes') {
+            const field = esiFields[fieldName];
+            if (!field || !field.element) return true;
+
+            const value = field.element.value;
+            const isValid = field.validate(value);
+           
+            if (!isValid) {
+                field.element.classList.add('is-invalid');
+                let errorElement = field.element.parentNode.querySelector('.field-error-message');
+                if (!errorElement) {
+                    errorElement = document.createElement('div');
+                    errorElement.className = 'field-error-message text-danger small mt-1';
+                    field.element.parentNode.appendChild(errorElement);
+                }
+                errorElement.textContent = field.errorMessage;
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                field.element.classList.remove('is-invalid');
+                const errorElement = field.element.parentNode.querySelector('.field-error-message');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+                return true;
+            }
+        }
+        return true;
+    }
+
+    // Form submission validation
+    function initializeFormValidation() {
+        const form = document.getElementById('addEmployeeForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                const errorMessages = [];
+
+                // Validate all main fields
+                Object.keys(fieldValidations).forEach(fieldName => {
+                    if (!validateField(fieldName)) {
+                        isValid = false;
+                        errorMessages.push(fieldValidations[fieldName].errorMessage);
+                    }
+                });
+
+                // Validate PF fields if applicable
+                const pfDetailsAvailable = document.getElementById('pfDetailsAvailable');
+                if (pfDetailsAvailable && pfDetailsAvailable.value === 'Yes') {
+                    Object.keys(pfFields).forEach(fieldName => {
+                        if (!validatePfField(fieldName)) {
+                            isValid = false;
+                            errorMessages.push(pfFields[fieldName].errorMessage);
+                        }
+                    });
+                }
+
+                // Validate ESI fields if applicable
+                const esiEligible = document.getElementById('esiEligible');
+                if (esiEligible && esiEligible.value === 'Yes') {
+                    Object.keys(esiFields).forEach(fieldName => {
+                        if (!validateEsiField(fieldName)) {
+                            isValid = false;
+                            errorMessages.push(esiFields[fieldName].errorMessage);
+                        }
+                    });
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    // Scroll to first error
+                    const firstError = document.querySelector('.is-invalid');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    alert('Please fix the errors in the form before submitting.');
+                }
+            });
+        }
+    }
+
+    // Additional field formatting and validation
+    function initializeAdditionalValidations() {
+        // Employee ID uppercase conversion
+        const employeeIdField = document.querySelector('input[name="employee_id"]');
+        if (employeeIdField) {
+            employeeIdField.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        }
+
+        // PAN number uppercase conversion and validation
+        const panField = document.querySelector('[name="pan_number"]');
+        if (panField) {
+            panField.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        }
+
+        // Aadhaar number - numbers only
+        const aadhaarField = document.querySelector('[name="aadhaar_number"]');
+        if (aadhaarField) {
+            aadhaarField.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '');
+            });
+        }
+
+        // Phone numbers - numbers only
+        // Phone numbers - numbers only, max 10 digits
+const phoneFields = [
+    'phone',
+    'alternate_phone',
+    'residence_number'
+];
+
+phoneFields.forEach(fieldName => {
+    const field = document.querySelector(`[name="${fieldName}"]`);
+    if (field) {
+        field.addEventListener('input', function() {
+            // Allow only numbers and limit to 10 digits
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+       
+        // Add maxlength attribute for better UX
+        field.setAttribute('maxlength', '10');
+    }
+});
+
+        // Name fields - letters only
+        const nameFields = [
+            'first_name',
+            'middle_name',
+            'last_name',
+            'father_name',
+            'mother_name',
+            'spouse_name',
+            'name_on_bank_account',
+            'nominee_name'
+        ];
+       
+        nameFields.forEach(fieldName => {
+            const field = document.querySelector(`[name="${fieldName}"]`);
+            if (field) {
+                field.addEventListener('input', function() {
+                    // Allow only letters and spaces
+                    this.value = this.value.replace(/[^A-Za-z\s]/g, '');
+                });
+            }
+        });
+    }
+
+    // Initialize all validation functions
+    initializeValidation();
+    initializePfValidation();
+    initializeEsiValidation();
+    initializeFormValidation();
+    initializeAdditionalValidations();
+});
+</script>
+
+<style>
+.field-error-message {
+    display: none;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3cpath d='M6 7v1'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.required::after {
+    content: " *";
+    color: #dc3545;
+}
+</style>
+
+<style>
+.required::after {
+    content: " *";
+    color: #dc3545;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3cpath d='M6 7v1'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.section-header {
+    background-color: #f8f9fa;
+    border-left: 4px solid #0d6efd;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+/* PF Fields transition */
+.pf-fields {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+/* ESI Fields transition */
+.esi-fields {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.field-error-message {
+    display: none;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3cpath d='M6 7v1'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.required::after {
+    content: " *";
+    color: #dc3545;
+}
+</style>
+<style>
+.manager-badge {
+    background-color: #f8f9fa;
+    transition: all 0.2s;
+}
+
+.manager-badge:hover {
+    background-color: #e9ecef;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+#selectedManagersList {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.manager-badge .remove-manager {
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.manager-badge:hover .remove-manager {
+    opacity: 1;
+}
+
+/* Ensure backward compatibility styling */
+#reportingManagerSearch {
+    border-right: none;
+}
+
+#addManagerBtn {
+    border-left: none;
+}
+</style>
+{% endblock %}
