@@ -1132,10 +1132,9 @@ class PayslipPDF(FPDF):
         self.multi_cell(
             0,
             5,
-            "\nIKONTEL SOLUTIONS PVT LTD\n\n"
-            "NO.72, 73 & 74, 1ST FLOOR AMRBP BUILDING, MARGOSA ROAD, 17TH CROSS RD,"
-            "\nMALLESWARAM"
-            "\nBENGALURU, KARNATAKA | IKONTEL SOLUTIONS PVT LTD",
+            "\nSoftMate Consulting PVT LTD \n"
+            "Plot No :686, 2nd floor, Saheed Nagar,"
+            "\nBhubaneswar, Odisha 751007",
             align="L",
         )
         # self.ln(3)

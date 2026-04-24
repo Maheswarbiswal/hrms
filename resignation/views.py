@@ -817,8 +817,8 @@ class NoDueCertificatePDF(BaseStyledPDF):
         self.multi_cell(
             0,
             4,
-            "IKONTEL SOLUTIONS PVT LTD | NO.72, 73 & 74, 1ST FLOOR AMRBP BUILDING, "
-            "MARGOSA ROAD, 17TH CROSS RD, MALLESWARAM, BENGALURU, KARNATAKA",
+            "SoftMate Consulting PVT LTD | Plot No :686, 2nd floor, Saheed Nagar, "
+            "Bhubaneswar, Odisha 751007",
             align="C",
         )
 
@@ -884,9 +884,9 @@ class ExitInterviewPDF(BaseStyledPDF):
         self.set_font("DejaVu", "", 8)
         self.set_text_color(128, 128, 128)
         footer_text = (
-            "IKONTEL SOLUTIONS PVT LTD | "
-            "NO.72, 73 & 74, 1ST FLOOR AMRBP BUILDING, MARGOSA ROAD, 17TH CROSS RD, "
-            "MALLESWARAM, BENGALURU, KARNATAKA"
+            "SoftMate Consulting PVT LTD | "
+            "Plot No :686, 2nd floor, Saheed Nagar,"
+            "Bhubaneswar, Odisha  751007"
         )
         self.set_draw_color(200, 200, 200)
         self.line(10, self.get_y(), self.w - 10, self.get_y())
@@ -984,7 +984,7 @@ def download_no_due_certificate(request, resignation_id):
         pdf.section_box("Declaration")
         paragraphs = [
             "Received my salary towards my full and final settlement through online/NEFT/Transfer. "
-            "All my dues from IKONTEL Solutions Pvt Ltd are cleared.",
+            "All my dues from SoftMate Consulting PVT LTD are cleared.",
             "I have received all my dues pertaining to earned leave encashment, notice pay, "
             "service compensation, leave or any other claim in connection with my employment.",
             "I have no further claim or demand for reinstatement or re-employment.",
